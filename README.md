@@ -1,2 +1,2 @@
 # explorative-data-analysis
-Explorative Data Analysis for our Dataset
+Explorative Data Analysis for our dataset
