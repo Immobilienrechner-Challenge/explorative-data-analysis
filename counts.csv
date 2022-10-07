@@ -1,0 +1,109 @@
+,n,dtype,nunique
+Index1,13378,int64,13378
+Index2,13378,int64,13378
+Municipality,12446,object,1505
+Living space,11634,object,531
+Plot area,4696,object,1706
+Floor space,2780,object,493
+Availability,12663,object,110
+location,13378,object,6330
+description,13378,object,13167
+detailed_description,13378,object,12543
+url,13378,object,13355
+table,13378,object,12713
+Floor,5315,object,23
+detail_responsive#municipality,451,object,322
+detail_responsive#surface_living,430,object,182
+detail_responsive#floor,206,object,12
+detail_responsive#available_from,460,object,21
+Gemeinde,158,object,123
+Wohnfläche,149,object,99
+Stockwerk,65,object,7
+Nutzfläche,42,object,40
+Verfügbarkeit,160,object,12
+Grundstücksfläche,60,object,58
+detail_responsive#surface_property,159,object,151
+detail_responsive#surface_usable,111,object,86
+Commune,66,object,66
+Surface habitable,64,object,50
+Surface du terrain,27,object,27
+Surface utile,14,object,14
+Disponibilité,67,object,11
+Étage,24,object,6
+Comune,27,object,24
+Superficie abitabile,27,object,24
+Disponibilità,28,object,5
+Gross return,6,object,2
+Piano,10,object,4
+Superficie del terreno,11,object,11
+Superficie utile,6,object,6
+Municipality_merged,12697,object,1512
+Floor_merged,5414,object,23
+Living_space_merged,11874,object,531
+Floor_space_merged,2842,object,497
+Plot_area_merged,4794,object,1713
+Availability_merged,12918,object,111
+location_parsed,13361,object,6305
+title,13378,object,12348
+details,13202,object,2741
+address,13378,object,6330
+price,13378,object,1333
+link,13378,object,13355
+details_structured,13378,object,13358
+lat,13361,float64,5349
+lon,13361,float64,5347
+index,13378,int64,2824
+ForestDensityL,13378,float64,2671
+ForestDensityM,13378,float64,2119
+ForestDensityS,13378,float64,1048
+Latitude,13378,float64,2821
+Locality,13378,object,1295
+Longitude,13378,float64,2821
+NoisePollutionRailwayL,13378,float64,1307
+NoisePollutionRailwayM,13378,float64,906
+NoisePollutionRailwayS,13378,float64,484
+NoisePollutionRoadL,13378,float64,2817
+NoisePollutionRoadM,13378,float64,2816
+NoisePollutionRoadS,13378,float64,2804
+PopulationDensityL,13378,float64,2821
+PopulationDensityM,13378,float64,2821
+PopulationDensityS,13378,float64,2790
+RiversAndLakesL,13378,float64,1467
+RiversAndLakesM,13378,float64,745
+RiversAndLakesS,13378,float64,238
+WorkplaceDensityL,13378,float64,2821
+WorkplaceDensityM,13378,float64,2813
+WorkplaceDensityS,13378,float64,2678
+Zip,13378,int64,1274
+distanceToTrainStation,13378,float64,2821
+gde_area_agriculture_percentage,13378,float64,1062
+gde_area_forest_percentage,13378,float64,1055
+gde_area_nonproductive_percentage,13378,float64,960
+gde_area_settlement_percentage,13378,float64,1062
+gde_average_house_hold,13378,float64,98
+gde_empty_apartments,13378,float64,1006
+gde_foreigners_percentage,13378,float64,1068
+gde_new_homes_per_1000,13378,float64,966
+gde_politics_bdp,8468,float64,834
+gde_politics_cvp,13061,float64,1030
+gde_politics_evp,9602,float64,868
+gde_politics_fdp,13226,float64,1047
+gde_politics_glp,11251,float64,924
+gde_politics_gps,12906,float64,1009
+gde_politics_pda,7076,float64,436
+gde_politics_rights,10706,float64,867
+gde_politics_sp,13279,float64,1052
+gde_politics_svp,13325,float64,1064
+gde_pop_per_km2,13378,float64,1069
+gde_population,13378,float64,1000
+gde_private_apartments,13378,float64,927
+gde_social_help_quota,13378,float64,958
+gde_tax,13378,float64,452
+gde_workers_sector1,13378,float64,263
+gde_workers_sector2,13378,float64,676
+gde_workers_sector3,13378,float64,825
+gde_workers_total,13378,float64,911
+price_cleaned,12362,float64,1327
+type,13378,object,21
+Space extracted,12308,float64,533
+rooms,12799,float64,10
