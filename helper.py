@@ -1,4 +1,6 @@
 import pandas as pd
+import re
+import numpy as np
 from sklearn.preprocessing import Normalizer
 
 
@@ -52,27 +54,79 @@ class ImmoHelper(object):
         if data == None:
             data = self.data.copy()
 
-        # Nur relevante Spalten selektieren
-        cols = [
-            "price_cleaned",
-            "Living space",
-            "type",
-            "rooms",
-            "gde_tax"
-        ]
-        data = data[cols]
+        def parse_floor(x):
+          if x != x:
+            return np.nan
+          elif x == 'Ground floor':
+            return 0
+          elif re.search('\. floor', x):
+            return re.search('\d+', x).group()
+          elif re.search('Basement', x):
+            return '-' + re.search('\d+', x).group()
 
-        # Relevante Spalten verarbeiten
-        data["Living space"] = data["Living space"].str.replace(
-            "m²", "").astype(float)
-        data = pd.get_dummies(data, columns=["type"])
-        data = data.dropna()
+        col_names = data.columns.array
+        col_names[0:2] = ['Index1', 'Index2']
+        data.columns = col_names
+
+        data_cleaned = pd.DataFrame()
+
+        # Merge columns
+        ## Living Space
+        data['living_space'] = data['Space extracted']
+        data['details_ls'] = data['details'].str.extract(', (\d+) m').astype(float)
+        data.loc[data['details_ls'].notna() & data['living_space'].isna(), 'living_space'] = data.loc[data['details_ls'].notna() & data['living_space'].isna(), 'details_ls']
+        data_cleaned['living_space'] = data['living_space'].astype(float)
+
+        ## Rooms
+        data_cleaned['rooms'] = data['details'].str.extract('(\d+\.?\d?) rooms, ').astype(float)
+
+        ## Plot Area
+        data_cleaned['plot_area'] = data['Plot_area_merged'].fillna('') + \
+          data['detail_responsive#surface_property'].fillna('')
+
+        ## Floor Space
+        data_cleaned['floor_space'] = data['Floor_space_merged'].fillna('') + \
+          data['detail_responsive#surface_usable'].fillna('')
+
+        ## FLoor
+        data_cleaned['floor'] = data['Floor_merged'].fillna('') + \
+          data['detail_responsive#floor'].fillna('')
+
+        ## Availability
+        data_cleaned['availability'] = data['Availability_merged'].fillna('') + \
+          data['detail_responsive#available_from'].fillna('')
+
+        ## Price
+        data_cleaned['price'] = data['price_cleaned']
+
+        # Parsing
+        data_cleaned['plot_area'] = data_cleaned['plot_area'].replace('', np.nan).str.extract('(\d+)').astype(float)
+        data_cleaned['floor_space'] = data_cleaned['floor_space'].replace('', np.nan).str.extract('(\d+)').astype(float)
+        data_cleaned['floor'] = data_cleaned['floor'].replace('', np.nan).apply(parse_floor).astype(float)
+        data_cleaned['availability'] = data_cleaned['availability'].replace('', np.nan)
+        data_cleaned = data_cleaned.join(data.loc[:, 'ForestDensityL':'type'])
+        data_cleaned.drop('price_cleaned', axis=1, inplace=True)
+        # # Nur relevante Spalten selektieren
+        # cols = [
+        #     "price_cleaned",
+        #     "Living space",
+        #     "type",
+        #     "rooms",
+        #     "gde_tax"
+        # ]
+        # data = data[cols]
+
+        # # Relevante Spalten verarbeiten
+        # data["Living space"] = data["Living space"].str.replace(
+        #     "m²", "").astype(float)
+        # data = pd.get_dummies(data, columns=["type"])
+        # data = data.dropna()
 
         # X und y definieren
-        y = data["price_cleaned"].values
-        X = data.drop(columns=["price_cleaned"]).values
+        y = data_cleaned["price"].values
+        X = data_cleaned.drop(columns=["price"]).values
 
-        self.data = data
+        self.data = data_cleaned
         self.X = X
         self.y = y
         return self.X, self.y
