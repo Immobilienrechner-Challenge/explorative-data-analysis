@@ -68,10 +68,9 @@ class ImmoHelper(object):
         data = pd.get_dummies(data, columns=["type"])
         data = data.dropna()
 
-        # X und y definieren und X normalisieren
+        # X und y definieren
         y = data["price_cleaned"].values
         X = data.drop(columns=["price_cleaned"]).values
-        X = Normalizer().transform(X)
 
         self.data = data
         self.X = X
