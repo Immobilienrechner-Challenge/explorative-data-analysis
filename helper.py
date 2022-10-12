@@ -99,6 +99,19 @@ class ImmoHelper(object):
         ## Price
         data_cleaned['price'] = data['price_cleaned']
 
+        ## Municipality
+        data_cleaned['municipality'] = data['Locality']
+
+        ## Street
+        data_cleaned["street"] = data['address'].str.extract(r'(.+?),')
+        data_cleaned['street'] = data_cleaned['street'].str.replace(r'^\d+\s\w+', 'NaN')
+
+        ## Zip Code
+        data_cleaned['zip_code'] = data['address'].str.extract(r'(\d{4})')
+
+        ## Canton
+        data_cleaned['canton'] = data['address'].str.extract(r'(\w{2})$')
+
         # Parsing
         data_cleaned['plot_area'] = data_cleaned['plot_area'].replace('', np.nan).str.extract('(\d+)').astype(float)
         data_cleaned['floor_space'] = data_cleaned['floor_space'].replace('', np.nan).str.extract('(\d+)').astype(float)
