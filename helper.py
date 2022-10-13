@@ -78,7 +78,7 @@ class ImmoHelper(object):
         col_names[0:2] = ['Index1', 'Index2']
         data.columns = col_names
 
-        data_cleaned = pd.DataFrame()
+        data_cleaned = pd.DataFrame() 
 
         # Merge columns
         ## Living Space
