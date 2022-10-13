@@ -50,8 +50,8 @@ class ImmoHelper(object):
         data = data.fillna(0)
         return data.values
 
-    def process_data(self, data=None):
-        if data == None:
+    def process_data(self, data=None, return_xy=True):
+        if data.empty:
             data = self.data.copy()
 
         def parse_floor(x):
@@ -63,6 +63,16 @@ class ImmoHelper(object):
             return re.search('\d+', x).group()
           elif re.search('Basement', x):
             return '-' + re.search('\d+', x).group()
+        
+        def parse_street(x):
+          if len(x) > 0:
+            m = re.search(r"\d", x)
+            if m:
+              return x[0:m.start()-1]
+            else:
+              return x
+          else:
+            return np.NaN
 
         col_names = data.columns.array
         col_names[0:2] = ['Index1', 'Index2']
@@ -103,14 +113,22 @@ class ImmoHelper(object):
         data_cleaned['municipality'] = data['Locality']
 
         ## Street
-        data_cleaned["street"] = data['address'].str.extract(r'(.+?),')
-        data_cleaned['street'] = data_cleaned['street'].str.replace(r'^\d+\s\w+', 'NaN')
+        data_cleaned["street"] = data['address'].str.extract(r'^([A-Z].+?), ')
+        data_cleaned["street_nr"] = data_cleaned['street'].str.extract(r'^.+ (\d.+)')
+        data_cleaned["street"] = data_cleaned['street'].fillna('').apply(parse_street)
+        data_cleaned["street"] = data_cleaned['street'].str.rstrip()
+        data_cleaned[data_cleaned["street"] == 'Lausanne'] = np.NaN
+        data_cleaned[data_cleaned["street"] == 'Lugano'] = np.NaN
+        # data_cleaned.loc[data_cleaned['street'].str.contains('NaN'), 'street'] = None
+        # data_cleaned['street'] = data_cleaned['street'].str.replace(r'^\d+\s?[A-Z][a-z]+', 'NaN')
 
         ## Zip Code
         data_cleaned['zip_code'] = data['address'].str.extract(r'(\d{4})')
+        data_cleaned['zip_code'] = pd.Categorical(data_cleaned['zip_code'])
 
         ## Canton
         data_cleaned['canton'] = data['address'].str.extract(r'(\w{2})$')
+        data_cleaned['canton'] = pd.Categorical(data_cleaned['canton'])
 
         # Parsing
         data_cleaned['plot_area'] = data_cleaned['plot_area'].replace('', np.nan).str.extract('(\d+)').astype(float)
@@ -119,6 +137,9 @@ class ImmoHelper(object):
         data_cleaned['availability'] = data_cleaned['availability'].replace('', np.nan)
         data_cleaned = data_cleaned.join(data.loc[:, 'ForestDensityL':'type'])
         data_cleaned.drop('price_cleaned', axis=1, inplace=True)
+
+        # Drop rows with missing values
+
         # # Nur relevante Spalten selektieren
         # cols = [
         #     "price_cleaned",
@@ -142,4 +163,7 @@ class ImmoHelper(object):
         self.data = data_cleaned
         self.X = X
         self.y = y
-        return self.X, self.y
+        if return_xy:
+          return self.X, self.y
+        else:
+          return data_cleaned
