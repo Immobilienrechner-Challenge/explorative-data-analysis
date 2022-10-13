@@ -119,8 +119,6 @@ class ImmoHelper(object):
         data_cleaned["street"] = data_cleaned['street'].str.rstrip()
         data_cleaned[data_cleaned["street"] == 'Lausanne'] = np.NaN
         data_cleaned[data_cleaned["street"] == 'Lugano'] = np.NaN
-        # data_cleaned.loc[data_cleaned['street'].str.contains('NaN'), 'street'] = None
-        # data_cleaned['street'] = data_cleaned['street'].str.replace(r'^\d+\s?[A-Z][a-z]+', 'NaN')
 
         ## Zip Code
         data_cleaned['zip_code'] = data['address'].str.extract(r'(\d{4})')
@@ -167,3 +165,63 @@ class ImmoHelper(object):
           return self.X, self.y
         else:
           return data_cleaned
+
+
+    def drop_cols(self):
+        '''
+        This Method is dropping all the unnecessary columns
+        from our raw DataFrame. 
+        The selected columns for dropping can be find  in this
+        excel sheet marked as red. 
+        https://github.com/Immobilienrechner-Challenge/explorative-data-analysis/blob/main/columns.xlsx
+        '''
+        cols_to_drop = ['Unnamed: 0', 'Unnamed: 0.1', 'Municipality', 'Living space', \
+                        'Plot area', 'Floor space', 'Availability', 'location', 'description', \
+                        'url', 'table', 'Floor', 'detail_responsive#municipality', \
+                        'detail_responsive#surface_living', 'detail_responsive#floor', \
+                        'detail_responsive#available_from', 'Gemeinde', 'Wohnfläche', \
+                        'Stockwerk', 'Nutzfläche', 'Verfügbarkeit', 'Grundstücksfläche',
+                        'detail_responsive#surface_property', \
+                        'detail_responsive#surface_usable', 'Commune', 'Surface habitable', \
+                        'Surface du terrain', 'Surface utile', 'Disponibilité', 'Étage', \
+                        'Comune', 'Superficie abitabile', 'Disponibilità', 'Gross return', \
+                        'Piano', 'Superficie del terreno', 'Superficie utile', \
+                        'Municipality_merged', 'Floor_merged', 'Living_space_merged', \
+                        'Floor_space_merged', 'Plot_area_merged', 'Availability_merged', \
+                        'location_parsed', 'title', 'details', 'price', 'link', 'details_structured', \
+                        'lon', 'lat', 'index', 'Space extracted', 'rooms']
+
+        self.data.drop(cols_to_drop, axis=1, inplace=True)
+        return self
+
+class dropper():
+
+  def drop(self, data):
+    '''
+    This Method is dropping all the unnecessary columns
+    from our raw DataFrame. 
+    The selected columns for dropping can be find  in this
+    excel sheet marked as red.
+    '''
+    # Create list of columns to drop
+    cols_to_drop = ['Unnamed: 0', 'Unnamed: 0.1', 'Municipality', 'Living space', \
+                    'Plot area', 'Floor space', 'Availability', 'location', 'description', \
+                    'table', 'Floor', 'detail_responsive#municipality', \
+                    'detail_responsive#surface_living', 'detail_responsive#floor', \
+                    'detail_responsive#available_from', 'Gemeinde', 'Wohnfläche', \
+                    'Stockwerk', 'Nutzfläche', 'Verfügbarkeit', 'Grundstücksfläche',
+                    'detail_responsive#surface_property', \
+                    'detail_responsive#surface_usable', 'Commune', 'Surface habitable', \
+                    'Surface du terrain', 'Surface utile', 'Disponibilité', 'Étage', \
+                    'Comune', 'Superficie abitabile', 'Disponibilità', 'Gross return', \
+                    'Piano', 'Superficie del terreno', 'Superficie utile', \
+                    'Municipality_merged', 'Floor_merged', 'Living_space_merged', \
+                    'Floor_space_merged', 'Plot_area_merged', 'Availability_merged', \
+                    'location_parsed', 'title', 'details', 'price', 'link', 'details_structured', \
+                    'lon', 'lat', 'index', 'Space extracted', 'rooms']
+
+    # Drop columns
+    data.drop(cols_to_drop, axis=1, inplace=True)
+
+    # Return data
+    return data
