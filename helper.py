@@ -93,8 +93,8 @@ class ImmoHelper(object):
       # Merge columns
       ## Living Space
       data['living_space'] = data['Space extracted']
-      data['details_ls'] = data['details'].str.extract(', (\d+) m').astype(float)
-      data.loc[data['details_ls'].notna() & data['living_space'].isna(), 'living_space'] = data.loc[data['details_ls'].notna() & data['living_space'].isna(), 'details_ls']
+      # data['details_ls'] = data['details'].str.extract(', (\d+) m').astype(float)
+      # data.loc[data['details_ls'].notna() & data['living_space'].isna(), 'living_space'] = data.loc[data['details_ls'].notna() & data['living_space'].isna(), 'details_ls']
       data_cleaned['living_space'] = data['living_space'].astype(float)
 
       ## Rooms
@@ -139,17 +139,23 @@ class ImmoHelper(object):
       data_cleaned['canton'] = pd.Categorical(data_cleaned['canton'])
 
       # Parsing
-      data_cleaned['plot_area'] = data_cleaned['plot_area'].replace('', np.nan).str.extract('(\d+)').astype(float)
-      data_cleaned['floor_space'] = data_cleaned['floor_space'].replace('', np.nan).str.extract('(\d+)').astype(float)
+      data_cleaned['plot_area'] = data_cleaned['plot_area'].replace('', np.nan).str.extract('(\d+,?\d*)')
+      data_cleaned['plot_area'] = data_cleaned['plot_area'].str.replace(',', '').astype(float)
+      data_cleaned['floor_space'] = data_cleaned['floor_space'].replace('', np.nan).str.extract('(\d+,?\d*)')
+      data_cleaned['floor_space'] = data_cleaned['floor_space'].str.replace(',', '').astype(float)
       data_cleaned['floor'] = data_cleaned['floor'].replace('', np.nan).apply(parse_floor).astype(float)
       data_cleaned['availability'] = data_cleaned['availability'].replace('', np.nan)
 
       # Merge DataFrames
       data_cleaned = data_cleaned.join(data.loc[:, 'ForestDensityL':'type'])
-      data_cleaned.drop('price_cleaned', axis=1, inplace=True)
+      data_cleaned.drop(['price_cleaned', 'Locality'], axis=1, inplace=True)
 
-      # Drop duplicates
+      # Drop duplicates and invalid values
       data_cleaned.drop_duplicates(inplace=True)
+      data_cleaned.loc[data_cleaned['floor'] >= 100, 'floor'] = np.nan
+      data_cleaned.loc[(data_cleaned['living_space'] > 1450) | (data_cleaned['living_space'] < 12), 'living_space'] = np.nan
+      data_cleaned.loc[(data_cleaned['plot_area'] > 247330) , 'plot_area'] = np.nan
+      data_cleaned.loc[(data_cleaned['price'] < 30000), 'price'] = np.nan
 
       if return_gde:
         return data_cleaned
