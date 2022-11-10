@@ -73,16 +73,6 @@ class ImmoHelper(object):
           return re.search('\d+', x).group()
         elif re.search('Basement', x):
           return '-' + re.search('\d+', x).group()
-        
-      def parse_street(x):
-        if len(x) > 0:
-          m = re.search(r"\d", x)
-          if m:
-            return x[0:m.start()-1]
-          else:
-            return x
-        else:
-          return np.NaN
 
       col_names = data.columns.array
       col_names[0:2] = ['Index1', 'Index2']
@@ -93,8 +83,6 @@ class ImmoHelper(object):
       # Merge columns
       ## Living Space
       data['living_space'] = data['Space extracted']
-      # data['details_ls'] = data['details'].str.extract(', (\d+) m').astype(float)
-      # data.loc[data['details_ls'].notna() & data['living_space'].isna(), 'living_space'] = data.loc[data['details_ls'].notna() & data['living_space'].isna(), 'details_ls']
       data_cleaned['living_space'] = data['living_space'].astype(float)
 
       ## Rooms
@@ -108,7 +96,7 @@ class ImmoHelper(object):
       data_cleaned['floor_space'] = data['Floor_space_merged'].fillna('') + \
         data['detail_responsive#surface_usable'].fillna('')
 
-      ## FLoor
+      ## Floor
       data_cleaned['floor'] = data['Floor_merged'].fillna('') + \
        data['detail_responsive#floor'].fillna('')
 
@@ -123,19 +111,20 @@ class ImmoHelper(object):
       data_cleaned['municipality'] = data['Locality']
 
       ## Street
-      data_cleaned["street"] = data['address'].str.extract(r'^([A-Z].+?), ')
+      data_cleaned["street"] = data['location_parsed'].str.extract(r'^Strasse: ?(.+?) plz')
+      data_cleaned["street"] = data_cleaned["street"].replace(' ', np.nan)
+
       data_cleaned["street_nr"] = data_cleaned['street'].str.extract(r'^.+ (\d.+)')
-      data_cleaned["street"] = data_cleaned['street'].fillna('').apply(parse_street)
+      # separate street name from street number
+      data_cleaned["street"] = data_cleaned['street'].str.extract(r'^(.+?) \d')
       data_cleaned["street"] = data_cleaned['street'].str.rstrip()
-      data_cleaned[data_cleaned["street"] == 'Lausanne'] = np.NaN
-      data_cleaned[data_cleaned["street"] == 'Lugano'] = np.NaN
 
       ## Zip Code
-      data_cleaned['zip_code'] = data['address'].str.extract(r'(\d{4})')
+      data_cleaned['zip_code'] = data['location_parsed'].str.extract(r'plz: ?(\d{4})')
       data_cleaned['zip_code'] = pd.Categorical(data_cleaned['zip_code'])
 
       ## Canton
-      data_cleaned['canton'] = data['address'].str.extract(r'(\w{2})$')
+      data_cleaned['canton'] = data['location_parsed'].str.extract(r'Kanton: ?(\w{2})$')
       data_cleaned['canton'] = pd.Categorical(data_cleaned['canton'])
 
       # Parsing
