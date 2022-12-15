@@ -132,8 +132,7 @@ class ImmoHelper(object):
         )
         data_cleaned.drop(["Locality"], axis=1, inplace=True)
 
-        # Drop duplicates and invalid values
-        data_cleaned.drop_duplicates(inplace=True)
+        # Override invalid values
         data_cleaned.loc[data_cleaned["floor"] >= 100, "floor"] = np.nan
         data_cleaned.loc[
             (data_cleaned["living_space"] > 1450) | (data_cleaned["living_space"] < 12),
