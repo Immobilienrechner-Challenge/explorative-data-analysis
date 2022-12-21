@@ -37,80 +37,61 @@ class ImmoHelper(object):
       data_cleaned['living_space'] = data['Space extracted']
 
       ## Rooms
-      data_cleaned['rooms'] = data['details_structured'].str.extract('(\d+\.?\d?) rooms').astype(float)
-      data_cleaned['rooms'] = data_cleaned['rooms'].fillna(data['No. of rooms:'])
+      data_cleaned['rooms'] = data['details_structured'].str.extract('(\d+\.?\d?) rooms').fillna(data['No. of rooms:']).astype(float)
 
       ## Plot Area
-      data_cleaned['plot_area'] = data['Plot_area_merged'].fillna('') + \
-        data['detail_responsive#surface_property'].fillna('')
-      data_cleaned['plot_area'] = data_cleaned['plot_area'].fillna(data['Land area:'])
+      data_cleaned['plot_area'] = data['Plot_area_merged'].fillna(data['detail_responsive#surface_property']).fillna(data['Land area:'])
     
       ## Floor Space
-      data_cleaned['floor_space'] = data['Floor_space_merged'].fillna('') + \
-        data['detail_responsive#surface_usable'].fillna('')
-      data_cleaned['floor_space'] = data_cleaned['floor_space'].fillna(data['Floor space:'])
+      data_cleaned['floor_space'] = data['Floor_space_merged'].fillna(data['detail_responsive#surface_usable']).fillna(data['Floor space:'])
 
       ## Floor
-      data_cleaned['floor'] = data['Floor_merged'].fillna('') + \
-        data['detail_responsive#floor'].fillna('')
-      data_cleaned['floor'] = data_cleaned['floor'].fillna(data['Floor']).replace('', np.nan)
+      data_cleaned['floor'] = data['Floor_merged'].fillna(data['detail_responsive#floor']).fillna(data['Floor']).fillna('').replace('', np.nan)
 
       ## Availability
-      data_cleaned['availability'] = data['Availability_merged'].fillna('') + \
-        data['detail_responsive#available_from'].fillna('')
+      data_cleaned['availability'] = data['Availability_merged'].fillna(data['detail_responsive#available_from'])
 
       ## Price
       if not kaggle:
           data_cleaned['price'] = data['price_cleaned']
 
-      ## zip code
+      ## Zip code
       data_cleaned['zip_code'] = data['address'].str.extract(r'(\d{4}) [A-ZÀ-Ÿ]') 
       data_cleaned['zip_address_s'] = data['address_s'].str.extract("(\d{4}) [A-ZÀ-Ÿ]")
       data_cleaned['zip_code'] = data_cleaned['zip_code'].fillna(data_cleaned['zip_address_s']) 
-      # drop where zip_code is na
-      data_cleaned.dropna(subset=['zip_code'], inplace=True)
 
-      # clean up typos
-      data_cleaned.loc[data_cleaned['zip_code'] == '2737', 'zip_code'] = '2735'
-      data_cleaned.loc[data_cleaned['zip_code'] == '3217', 'zip_code'] = '3127'
-      data_cleaned.loc[data_cleaned['zip_code'] == '3364', 'zip_code'] = '3365'
-      
+      if not kaggle:
+        # Clean up typos
+        data_cleaned.loc[data_cleaned['zip_code'] == '2737', 'zip_code'] = '2735'
+        data_cleaned.loc[data_cleaned['zip_code'] == '3217', 'zip_code'] = '3127'
+        data_cleaned.loc[data_cleaned['zip_code'] == '3364', 'zip_code'] = '3365'
 
       data_cleaned['municipality'] = data['address'].str.extract(r'\d{4} (.+?),')
       data_cleaned['municipality_address_s'] = data['address_s'].str.extract(r"\d{4} (.+)$")
       data_cleaned['municipality'] = data_cleaned['municipality'].fillna(data_cleaned['municipality_address_s'])
       
+      ## Canton
       df_xlsx_plz = pd.read_excel("./utils/plz.xlsx", sheet_name='Blatt1')
       df_xlsx_plz.drop(['Kanton', 'Canton', 'Cantone', 'Land', 'Pays', 'Paese'], axis=1, inplace=True)
       df_xlsx_plz.rename(columns={df_xlsx_plz.columns[0]: 'plz', df_xlsx_plz.columns[1]: 'municipality', df_xlsx_plz.columns[2]: 'canton'}, inplace=True)
       df_xlsx_plz.drop_duplicates(subset=['plz'], inplace=True)
 
-      data_cleaned['canton'] = data_cleaned['zip_code'].astype(int).map(df_xlsx_plz.set_index('plz')['canton']).copy()
+      data_cleaned['canton'] = data_cleaned['zip_code'].fillna(0).astype(int).map(df_xlsx_plz.set_index('plz')['canton']).copy()
       
-      # Clean up cantons
-      data_cleaned.loc[data_cleaned['zip_code'] == '1919', 'canton'] = 'VS'
-      data_cleaned.loc[data_cleaned['zip_code'] == '1818', 'canton'] = 'VD'
-
       ## Street
       data_cleaned["street"] = data['address'].str.extract(r"(.+), \d{4}")
-      data_cleaned.loc[data_cleaned['street'] == '-', 'street'] = np.nan
-      data_cleaned.loc[data_cleaned['street'] == 'à', 'street'] = np.nan
-
-
       data_cleaned["street_nr"] = data_cleaned['street'].str.extract(r'^.+ (\d.+)')
-      
-      # separate street name from street number
       data_cleaned["street"] = data_cleaned['street'].str.extract(r'^(.+?) \d')
       data_cleaned["street"] = data_cleaned['street'].str.rstrip()
 
       # Parsing
-      data_cleaned['plot_area'] = data_cleaned['plot_area'].replace('', np.nan).str.extract('(\d+,?\d*)')
+      data_cleaned['plot_area'] = data_cleaned['plot_area'].str.extract('(\d+,?\d*)')
       data_cleaned['plot_area'] = data_cleaned['plot_area'].str.replace(',', '').astype(float)
       data_cleaned['living_space'] = data_cleaned['living_space'].astype(float)
-      data_cleaned['floor_space'] = data_cleaned['floor_space'].replace('', np.nan).str.extract('(\d+,?\d*)')
+      data_cleaned['floor_space'] = data_cleaned['floor_space'].str.extract('(\d+,?\d*)')
       data_cleaned['floor_space'] = data_cleaned['floor_space'].str.replace(',', '').astype(float)
       data_cleaned['floor'] = data_cleaned['floor'].apply(self._parse_floor).astype(float)
-      data_cleaned['availability'] = data_cleaned['availability'].replace('', np.nan)
+      data_cleaned['availability'] = data_cleaned['availability']
 
       # Merge DataFrames
       cols_to_join = ['type_unified', 'features', 'Last refurbishment:', 'Year built:']
