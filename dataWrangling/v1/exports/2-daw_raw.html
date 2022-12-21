@@ -14612,7 +14612,7 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h1 id="Summary">Summary<a class="anchor-link" href="#Summary">&#182;</a></h1><p><code>description</code><br />
+<h1 id="Summary">Summary<a class="anchor-link" href="#Summary">&#182;</a></h1><p><code>description</code> 
 Contains information on the features <code>Rooms</code>, <code>Living Space</code> and <code>Price</code></p>
 <p><code>detailed_description</code><br />
 No way to extract data in a structured way</p>
@@ -14638,11 +14638,23 @@ Contains information on the features <code>Living Space</code> and <code>Rooms</
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">re</span>
-<span class="kn">import</span> <span class="nn">json</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
-<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">permutations</span>
-<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">combinations</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Set display options</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s1">'display.max_columns'</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="s1">'display.max_rows'</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
 </pre></div>
 
      </div>
@@ -15169,7 +15181,7 @@ Name: detailed_description, Length: 12543, dtype: int64</pre>
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>In this column contains, as the name suggests, the detailed description of the posting. This data does not follow any specific pattern and does not contain any reliable information on the features we are investigating in this notebook. Therefore we discard it.<br />
+<p>This column contains, as the name suggests, the detailed description of the posting. This data does not follow any specific pattern and does not contain any reliable information on the features we are investigating in this notebook. Therefore we discard it.<br />
 With nlp techniques applied it may become useful for fine tuning predictions though.</p>
 
 </div>
