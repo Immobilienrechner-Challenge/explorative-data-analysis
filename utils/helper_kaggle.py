@@ -42,7 +42,7 @@ class ImmoHelper(object):
                 return "-" + re.search("\d+", x).group()
 
         col_names = data.columns.array
-        col_names[0:2] = ["Index1", "Index2"]
+        col_names[:2] = ["Index", "Index2"]
         data.columns = col_names
 
         data_cleaned = pd.DataFrame()
@@ -140,6 +140,9 @@ class ImmoHelper(object):
         ] = np.nan
         data_cleaned.loc[(data_cleaned["plot_area"] > 247330), "plot_area"] = np.nan
         # data_cleaned.loc[(data_cleaned["price"] < 30000), "price"] = np.nan
+
+        data_cleaned["Index"] = data["Index"].astype(int)
+        data_cleaned.set_index("Index", inplace=True, drop=True)
 
         if return_gde:
             return data_cleaned
