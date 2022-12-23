@@ -38,14 +38,15 @@ class ImmoHelper(object):
 
         # Merge columns
         ## Living Space
-        data_cleaned["living_space"] = data["Space extracted"]
+        data_cleaned["living_space"] = data["Living_area_unified"].astype(float)
+        data_cleaned["living_space"] = data_cleaned["living_space"].fillna(
+            data["Space extracted"]
+        )
 
         ## Rooms
-        data_cleaned["rooms"] = (
-            data["details_structured"]
-            .str.extract("(\d+\.?\d?) rooms")
-            .fillna(data["No. of rooms:"])
-            .astype(float)
+        data_cleaned["rooms"] = data["rooms"].str.replace("rm", "").astype(float)
+        data_cleaned["rooms"] = data_cleaned["rooms"].fillna(
+            data["No. of rooms:"].astype(float)[0]
         )
 
         ## Plot Area
