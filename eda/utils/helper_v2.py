@@ -21,10 +21,10 @@ class ImmoHelper(object):
             return "-" + re.search("\d+", x).group()
 
     def process_data(self, data=None, return_gde=False, kaggle=False):
-        """Processes immoscout_cleaned_lat_lon_fixed_v9.csv according to eda findings and returns a tidy dataset.
+        """Processes immo_data_202208_v2.parquet according to eda findings and returns a tidy dataset.
 
         Args:
-            data (DataFrame, optional): Uses immoscout_cleaned_lat_lon_fixed_v9.csv if left default. Defaults to None.
+            data (DataFrame, optional): Uses immo_data_202208_v2.parquet if left default. Defaults to None.
             return_gde (bool, optional): Return with or without extra columns ('ForestDensityL':'gde_workers_total'). Defaults to False.
 
         Returns:

@@ -14593,7 +14593,7 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h1 id="Purpose">Purpose<a class="anchor-link" href="#Purpose">&#182;</a></h1><p>The Purpose of this Notebook is to learn how to consolidate numerical features from <code>immoscout_cleaned_lat_lon_fixed_v9.csv</code> in one column each.</p>
+<h1 id="Purpose">Purpose<a class="anchor-link" href="#Purpose">&#182;</a></h1><p>The purpose of this notebook is to learn how to consolidate numerical features from <code>data/immo_data_202208.csv</code> in one column each.</p>
 
 </div>
 </div>
@@ -14608,12 +14608,12 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 <h1 id="Summary">Summary<a class="anchor-link" href="#Summary">&#182;</a></h1><p>| Feature       | Complete Data found in/with                                      | 
 | ------------- | ---------------------------------------------------------------- |
 | Living Space  | Column <code>Space extracted</code>                                         |
-| Rooms         | RegEx <code>(\d+\.?\d?) rooms</code> from column <code>details_structured</code>       |
+| Rooms         | RegEx <code>(\d+\.?\d?) rooms</code> on column <code>details_structured</code>         |
 | Plot Area     | Join <code>Plot_area_merged</code> and <code>detail_responsive#surface_property</code> |
 | Floor Space   | Join <code>Floor_space_merged</code> and <code>detail_responsive#surface_usable</code> |
 | Floor         | Join <code>Floor_merged</code> and <code>detail_responsive#floor</code>                |
 | Price         | Column <code>price_cleaned</code>                                           |
-| Coordinates   | use <code>Latitude</code> and <code>Longitude</code>                                   |</p>
+| Coordinates   | <code>Latitude</code> and <code>Longitude</code>                                       |</p>
 
 </div>
 </div>
@@ -14648,7 +14648,10 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Read Data</span>
-<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">'https://raw.githubusercontent.com/Immobilienrechner-Challenge/data/main/immoscout_cleaned_lat_lon_fixed_v9.csv'</span><span class="p">,</span> <span class="n">low_memory</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span>
+    <span class="s2">"https://raw.githubusercontent.com/Immobilienrechner-Challenge/data/main/immo_data_202208.csv"</span><span class="p">,</span>
+    <span class="n">low_memory</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span>
 </pre></div>
 
      </div>
@@ -14674,7 +14677,7 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>Let's first create a subset containing only the columns with data on the living space to investigate how we can get the full set of data for living space. In <a href="./1-daw_columns.html">this</a> notebook we've found the following columns contain data on the living space:</p>
+<p>In <a href="./1-daw_columns.html">this</a> notebook we've found the following columns contain data on the living space:</p>
 <ul>
 <li><code>Living space</code></li>
 <li><code>Living_space_merged</code></li>
@@ -14715,21 +14718,31 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">cols_living_space</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'Living space'</span><span class="p">,</span> <span class="s1">'Superficie abitabile'</span><span class="p">,</span> <span class="s1">'Surface habitable'</span><span class="p">,</span> <span class="s1">'Wohnfläche'</span><span class="p">,</span> <span class="s1">'detail_responsive#surface_living'</span><span class="p">,</span> <span class="s1">'Living_space_merged'</span><span class="p">,</span> <span class="s1">'Space extracted'</span><span class="p">]</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">cols_living_space</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">"Living space"</span><span class="p">,</span>
+    <span class="s2">"Superficie abitabile"</span><span class="p">,</span>
+    <span class="s2">"Surface habitable"</span><span class="p">,</span>
+    <span class="s2">"Wohnfläche"</span><span class="p">,</span>
+    <span class="s2">"detail_responsive#surface_living"</span><span class="p">,</span>
+    <span class="s2">"Living_space_merged"</span><span class="p">,</span>
+    <span class="s2">"Space extracted"</span><span class="p">,</span>
+<span class="p">]</span>
 <span class="n">df_living_space</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">cols_living_space</span><span class="p">]</span>
 
 <span class="c1"># description</span>
-<span class="n">df_living_space</span><span class="p">[</span><span class="s1">'from_description'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">'description'</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="s1">'(\d+) m²«'</span><span class="p">)</span>
+<span class="n">df_living_space</span><span class="p">[</span><span class="s2">"from_description"</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">"description"</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="s2">"(\d+) m²«"</span><span class="p">)</span>
 
 <span class="c1"># table</span>
-<span class="n">df_living_space</span><span class="p">[</span><span class="s1">'from_table'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">'table'</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="s1">'Living space.+####&gt;(\d+) m'</span><span class="p">)</span>
+<span class="n">df_living_space</span><span class="p">[</span><span class="s2">"from_table"</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">"table"</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="s2">"Living space.+####&gt;(\d+) m"</span><span class="p">)</span>
 
 
 <span class="c1"># details_structured</span>
-<span class="n">df_living_space</span><span class="p">[</span><span class="s1">'from_details_structured'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">'details_structured'</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="s2">"'Living space': '(\d+) m²"</span><span class="p">)</span>
+<span class="n">df_living_space</span><span class="p">[</span><span class="s2">"from_details_structured"</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">"details_structured"</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span>
+    <span class="s2">"'Living space': '(\d+) m²"</span>
+<span class="p">)</span>
 
 <span class="c1"># details</span>
-<span class="n">df_living_space</span><span class="p">[</span><span class="s1">'from_details'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">'details'</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="s1">'(\d+) m²'</span><span class="p">)</span>
+<span class="n">df_living_space</span><span class="p">[</span><span class="s2">"from_details"</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">"details"</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="s2">"(\d+) m²"</span><span class="p">)</span>
 </pre></div>
 
      </div>
@@ -14757,9 +14770,11 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># sort columns by number of non-null values</span>
-<span class="n">df_living_space</span> <span class="o">=</span> <span class="n">df_living_space</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">df_living_space</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="c1"># create isna heatmap</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Sort columns by number of non-null values</span>
+<span class="n">df_living_space</span> <span class="o">=</span> <span class="n">df_living_space</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span>
+    <span class="n">df_living_space</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span>
+<span class="p">)</span>
+<span class="c1"># Create isna heatmap</span>
 <span class="n">sns</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">df_living_space</span><span class="o">.</span><span class="n">isna</span><span class="p">(),</span> <span class="n">cbar</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
@@ -14825,7 +14840,7 @@ class="
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>First we verify that <code>Living_space_merged</code> is a combination of <code>Living space</code>, <code>Wohnfläche</code>, <code>Surface habitable</code> and <code>Superficie abitabile</code> by comparing the cumulative sum of the value counts per column against the <code>Living_space_merged</code>-count. This allows us to see if any combination of value counts add up to the same number:</p>
+<p>First we verify that <code>Living_space_merged</code> is a combination of <code>Living space</code>, <code>Wohnfläche</code>, <code>Surface habitable</code> and <code>Superficie abitabile</code> by comparing the cumulative sum of the value counts per column against the <code>Living_space_merged</code>-count. This allows us to see if any combination of value counts adds up to the same number:</p>
 
 </div>
 </div>
@@ -14838,7 +14853,9 @@ class="
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_living_space</span><span class="p">[</span><span class="n">cols_living_space</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">5</span><span class="p">]]</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="o">.</span><span class="n">cumsum</span><span class="p">()</span> <span class="o">==</span> <span class="n">df_living_space</span><span class="p">[</span><span class="n">cols_living_space</span><span class="p">[</span><span class="mi">5</span><span class="p">]]</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_living_space</span><span class="p">[</span><span class="n">cols_living_space</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">5</span><span class="p">]]</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="o">.</span><span class="n">cumsum</span><span class="p">()</span> <span class="o">==</span> <span class="n">df_living_space</span><span class="p">[</span>
+    <span class="n">cols_living_space</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span>
+<span class="p">]</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
 </pre></div>
 
      </div>
@@ -14881,8 +14898,8 @@ dtype: bool</pre>
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>As we see above, the cumulative sum of the values in columns <code>Living space</code>, <code>Wohnfläche</code>, <code>Surface habitable</code>, <code>Superficie abitabile</code> adds up to the same amount as the <code>Living_space_merged</code> value count.</p>
-<p>However this does not guarantee that this contains the same information. We therefore investigate if the data contained in <code>Living_space_merged</code> is actually the same data contained in columns <code>Living space</code>, <code>Wohnfläche</code>, <code>Surface habitable</code> and <code>Superficie abitabile</code>.</p>
+<p>As we see above the cumulative sum of the values in columns <code>Living space</code>, <code>Wohnfläche</code>, <code>Surface habitable</code>, <code>Superficie abitabile</code> add up to the same amount as the <code>Living_space_merged</code> value count.</p>
+<p>However this does not prove that this contains the same information. We therefore investigate if the data contained in <code>Living_space_merged</code> is actually the same data contained in columns <code>Living space</code>, <code>Wohnfläche</code>, <code>Surface habitable</code> and <code>Superficie abitabile</code>.</p>
 <p>To do so we first combine the respective columns into one named <code>living_space</code> so we can compare the columns.</p>
 
 </div>
@@ -14897,13 +14914,18 @@ dtype: bool</pre>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Merge columns except for 'Living_space_merged' into 'living_space'</span>
-<span class="n">df_living_space</span><span class="p">[</span><span class="s1">'living_space'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_living_space</span><span class="p">[</span><span class="n">cols_living_space</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s1">''</span><span class="p">)</span> <span class="o">+</span> \
-  <span class="p">(</span><span class="n">df_living_space</span><span class="p">[</span><span class="n">cols_living_space</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s1">''</span><span class="p">)</span> <span class="o">+</span> \
-  <span class="p">(</span><span class="n">df_living_space</span><span class="p">[</span><span class="n">cols_living_space</span><span class="p">[</span><span class="mi">2</span><span class="p">]])</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s1">''</span><span class="p">)</span> <span class="o">+</span> \
-  <span class="p">(</span><span class="n">df_living_space</span><span class="p">[</span><span class="n">cols_living_space</span><span class="p">[</span><span class="mi">3</span><span class="p">]])</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s1">''</span><span class="p">)</span>
+<span class="n">df_living_space</span><span class="p">[</span><span class="s2">"living_space"</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">df_living_space</span><span class="p">[</span><span class="n">cols_living_space</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+    <span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">df_living_space</span><span class="p">[</span><span class="n">cols_living_space</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span>
+    <span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">df_living_space</span><span class="p">[</span><span class="n">cols_living_space</span><span class="p">[</span><span class="mi">2</span><span class="p">]])</span>
+    <span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">df_living_space</span><span class="p">[</span><span class="n">cols_living_space</span><span class="p">[</span><span class="mi">3</span><span class="p">]])</span>
+<span class="p">)</span>
 
-<span class="c1"># compare 'living_space' with 'Living_space_merged'</span>
-<span class="p">(</span><span class="n">df_living_space</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s1">'living_space'</span><span class="p">]</span> <span class="o">==</span> <span class="n">df_living_space</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">cols_living_space</span><span class="p">[</span><span class="mi">5</span><span class="p">]]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s1">''</span><span class="p">))</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">==</span> <span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="c1"># Compare 'living_space' with 'Living_space_merged'</span>
+<span class="p">(</span>
+    <span class="n">df_living_space</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s2">"living_space"</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s2">""</span><span class="p">)</span>
+    <span class="o">==</span> <span class="n">df_living_space</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">cols_living_space</span><span class="p">[</span><span class="mi">5</span><span class="p">]]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s2">""</span><span class="p">)</span>
+<span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">==</span> <span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 </pre></div>
 
      </div>
@@ -14942,7 +14964,7 @@ dtype: bool</pre>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
 <p>Counting the <code>True</code> values of the comparison of the two columns yields the same count as the column count of the dataset meaning that all rows of the two columns are identical.</p>
-<p>Therefore we can confirm, that the column <code>Living_space_merged</code> contains all information from the columns <code>Living space</code>, <code>Wohnfläche</code>, <code>Surface habitable</code> and <code>Superficie abitabile</code>.</p>
+<p>Therefore we can confirm that the column <code>Living_space_merged</code> contains all information from the columns <code>Living space</code>, <code>Wohnfläche</code>, <code>Surface habitable</code> and <code>Superficie abitabile</code>.</p>
 <p>What about the columns <code>detail_responsive#surface_living</code> and <code>Space extracted</code>?</p>
 <p>Let's check if there's any additional data in <code>detail_responsive#surface_living</code>.</p>
 
@@ -14957,11 +14979,13 @@ dtype: bool</pre>
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># re replace empty strings with NaN in 'living_space'</span>
-<span class="n">df_living_space</span><span class="p">[</span><span class="s1">'living_space'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_living_space</span><span class="p">[</span><span class="s1">'living_space'</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">''</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">NaN</span><span class="p">)</span>
-
-<span class="c1"># display rows where 'living_space' is NaN but 'detail_responsive#surface_living' is not</span>
-<span class="n">display</span><span class="p">(</span><span class="n">df_living_space</span><span class="p">[</span><span class="n">df_living_space</span><span class="p">[</span><span class="s1">'living_space'</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span> <span class="o">&amp;</span> <span class="n">df_living_space</span><span class="p">[</span><span class="s2">"detail_responsive#surface_living"</span><span class="p">]</span><span class="o">.</span><span class="n">notna</span><span class="p">()])</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Display rows where 'living_space' is NaN but 'detail_responsive#surface_living' is not</span>
+<span class="n">display</span><span class="p">(</span>
+    <span class="n">df_living_space</span><span class="p">[</span>
+        <span class="n">df_living_space</span><span class="p">[</span><span class="s2">"living_space"</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span>
+        <span class="o">&amp;</span> <span class="n">df_living_space</span><span class="p">[</span><span class="s2">"detail_responsive#surface_living"</span><span class="p">]</span><span class="o">.</span><span class="n">notna</span><span class="p">()</span>
+    <span class="p">]</span>
+<span class="p">)</span>
 </pre></div>
 
      </div>
@@ -15213,12 +15237,10 @@ Let's merge the column <code>detail_responsive#surface_living</code> into <code>
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># merge columns 'detail_responsive#surface_living' and 'Living_space_merged' into 'living_space'</span>
-<span class="n">df_living_space</span><span class="p">[</span><span class="s1">'living_space'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_living_space</span><span class="p">[</span><span class="n">cols_living_space</span><span class="p">[</span><span class="mi">5</span><span class="p">]]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s1">''</span><span class="p">)</span> <span class="o">+</span> \
-  <span class="p">(</span><span class="n">df_living_space</span><span class="p">[</span><span class="n">cols_living_space</span><span class="p">[</span><span class="mi">4</span><span class="p">]])</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s1">''</span><span class="p">)</span>
-
-<span class="c1"># replace empty strings with NaN in 'living_space'</span>
-<span class="n">df_living_space</span><span class="p">[</span><span class="s1">'living_space'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_living_space</span><span class="p">[</span><span class="s1">'living_space'</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">''</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Merge columns 'detail_responsive#surface_living' and 'Living_space_merged' into 'living_space'</span>
+<span class="n">df_living_space</span><span class="p">[</span><span class="s2">"living_space"</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_living_space</span><span class="p">[</span><span class="n">cols_living_space</span><span class="p">[</span><span class="mi">5</span><span class="p">]]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span>
+    <span class="n">df_living_space</span><span class="p">[</span><span class="n">cols_living_space</span><span class="p">[</span><span class="mi">4</span><span class="p">]]</span>
+<span class="p">)</span>
 
 <span class="n">df_living_space</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
 </pre></div>
@@ -15283,8 +15305,12 @@ dtype: int64</pre>
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># display rows where 'living_space' is na but 'detail_responsive#surface_living' is not</span>
-<span class="n">display</span><span class="p">(</span><span class="n">df_living_space</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">'Space extracted'</span><span class="p">]</span><span class="o">.</span><span class="n">notna</span><span class="p">()</span> <span class="o">&amp;</span> <span class="n">df_living_space</span><span class="p">[</span><span class="s1">'living_space'</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">(),</span> <span class="p">:])</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Display rows where 'living_space' is na but 'detail_responsive#surface_living' is not</span>
+<span class="n">display</span><span class="p">(</span>
+    <span class="n">df_living_space</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span>
+        <span class="n">df</span><span class="p">[</span><span class="s2">"Space extracted"</span><span class="p">]</span><span class="o">.</span><span class="n">notna</span><span class="p">()</span> <span class="o">&amp;</span> <span class="n">df_living_space</span><span class="p">[</span><span class="s2">"living_space"</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">(),</span> <span class="p">:</span>
+    <span class="p">]</span>
+<span class="p">)</span>
 </pre></div>
 
      </div>
@@ -15430,11 +15456,13 @@ But does the column <code>Space extracted</code> actually contain the same infor
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># parse 'living_space' as float</span>
-<span class="n">df_living_space</span><span class="p">[</span><span class="s1">'living_space'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_living_space</span><span class="o">.</span><span class="n">living_space</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="s1">'(\d+)'</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Parse 'living_space' as float</span>
+<span class="n">df_living_space</span><span class="p">[</span><span class="s2">"living_space"</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_living_space</span><span class="o">.</span><span class="n">living_space</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span>
+    <span class="s2">"(\d+)"</span>
+<span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
 
-<span class="c1"># compare 'living_space' with 'Space extracted'</span>
-<span class="n">df_living_space</span><span class="p">[</span><span class="s1">'living_space'</span><span class="p">]</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="n">df_living_space</span><span class="p">[</span><span class="s1">'Space extracted'</span><span class="p">]</span><span class="o">.</span><span class="n">dtype</span>
+<span class="c1"># Compare 'living_space' with 'Space extracted'</span>
+<span class="n">df_living_space</span><span class="p">[</span><span class="s2">"living_space"</span><span class="p">]</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="n">df_living_space</span><span class="p">[</span><span class="s2">"Space extracted"</span><span class="p">]</span><span class="o">.</span><span class="n">dtype</span>
 </pre></div>
 
      </div>
@@ -15472,7 +15500,7 @@ But does the column <code>Space extracted</code> actually contain the same infor
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>Now with the same datatype, the data can be merged and compared once more.</p>
+<p>Now with the same datatype the data can be merged and compared once more.</p>
 
 </div>
 </div>
@@ -15485,10 +15513,14 @@ But does the column <code>Space extracted</code> actually contain the same infor
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># fill NAs in 'living_space' with 'Space extracted'</span>
-<span class="n">df_living_space</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df_living_space</span><span class="p">[</span><span class="s1">'Space extracted'</span><span class="p">]</span><span class="o">.</span><span class="n">notna</span><span class="p">()</span> <span class="o">&amp;</span> <span class="n">df_living_space</span><span class="p">[</span><span class="s1">'living_space'</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">(),</span> <span class="s1">'living_space'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_living_space</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df_living_space</span><span class="p">[</span><span class="s1">'Space extracted'</span><span class="p">]</span><span class="o">.</span><span class="n">notna</span><span class="p">()</span> <span class="o">&amp;</span> <span class="n">df_living_space</span><span class="p">[</span><span class="s1">'living_space'</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">(),</span> <span class="s1">'Space extracted'</span><span class="p">]</span>
-<span class="c1"># compare 'living_space' with 'Space extracted'</span>
-<span class="p">(</span><span class="n">df_living_space</span><span class="p">[</span><span class="s1">'Space extracted'</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">==</span> <span class="n">df_living_space</span><span class="p">[</span><span class="s1">'living_space'</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">==</span> <span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Fill NAs in 'living_space' with 'Space extracted'</span>
+<span class="n">df_living_space</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">df_living_space</span><span class="p">[</span><span class="s2">"Space extracted"</span><span class="p">],</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Compare 'living_space' with 'Space extracted'</span>
+<span class="p">(</span>
+    <span class="n">df_living_space</span><span class="p">[</span><span class="s2">"Space extracted"</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="o">==</span> <span class="n">df_living_space</span><span class="p">[</span><span class="s2">"living_space"</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">==</span> <span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 </pre></div>
 
      </div>
@@ -15539,10 +15571,24 @@ But does the column <code>Space extracted</code> actually contain the same infor
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># set 'living_space' as 'Space extracted'</span>
-<span class="n">df_living_space</span><span class="p">[</span><span class="s1">'living_space'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_living_space</span><span class="p">[</span><span class="s1">'Space extracted'</span><span class="p">]</span>
-<span class="c1"># drop columns that are proven to be redundant</span>
-<span class="n">df_living_space</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">'Living space'</span><span class="p">,</span> <span class="s1">'Wohnfläche'</span><span class="p">,</span> <span class="s1">'Surface habitable'</span><span class="p">,</span> <span class="s1">'Superficie abitabile'</span><span class="p">,</span> <span class="s1">'detail_responsive#surface_living'</span><span class="p">,</span> <span class="s1">'Living_space_merged'</span><span class="p">,</span> <span class="s1">'Space extracted'</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Set 'living_space' as 'Space extracted'</span>
+<span class="n">df_living_space</span><span class="p">[</span><span class="s2">"living_space"</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_living_space</span><span class="p">[</span><span class="s2">"Space extracted"</span><span class="p">]</span>
+
+<span class="c1"># Drop columns that are proven to be redundant</span>
+<span class="n">df_living_space</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span>
+    <span class="p">[</span>
+        <span class="s2">"Living space"</span><span class="p">,</span>
+        <span class="s2">"Wohnfläche"</span><span class="p">,</span>
+        <span class="s2">"Surface habitable"</span><span class="p">,</span>
+        <span class="s2">"Superficie abitabile"</span><span class="p">,</span>
+        <span class="s2">"detail_responsive#surface_living"</span><span class="p">,</span>
+        <span class="s2">"Living_space_merged"</span><span class="p">,</span>
+        <span class="s2">"Space extracted"</span><span class="p">,</span>
+    <span class="p">],</span>
+    <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+
 <span class="n">df_living_space</span><span class="o">.</span><span class="n">living_space</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
 </pre></div>
 
@@ -15600,7 +15646,7 @@ Name: living_space, dtype: float64</pre>
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>The notebook <a href="./2-daw_raw.html">2-daw_raw.iopynb</a> shows that the columns <code>description</code>, <code>detailed_description</code>, <code>table</code>, <code>details</code> and <code>details_structured</code> might contain data about the living space in a raw form. In the following section this data is explored to gain the most amount of data possible.</p>
+<p>The notebook <a href="./2-daw_raw.html">2-daw_raw.ipynb</a> shows that the columns <code>description</code>, <code>detailed_description</code>, <code>table</code>, <code>details</code> and <code>details_structured</code> might contain data about the living space in a raw form. In the following section this data is explored to gain the most amount of data possible.</p>
 
 </div>
 </div>
@@ -15624,7 +15670,7 @@ Name: living_space, dtype: float64</pre>
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">'description count:'</span><span class="p">,</span> <span class="n">df_living_space</span><span class="p">[</span><span class="s1">'from_description'</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">())</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">"description count:"</span><span class="p">,</span> <span class="n">df_living_space</span><span class="p">[</span><span class="s2">"from_description"</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">())</span>
 </pre></div>
 
      </div>
@@ -15673,7 +15719,14 @@ Name: living_space, dtype: float64</pre>
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">'Difference between living_space and from_description, where it is equal to living_space: '</span><span class="p">,</span> <span class="n">df_living_space</span><span class="p">[</span><span class="s1">'living_space'</span><span class="p">]</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">-</span> <span class="p">(</span><span class="n">df_living_space</span><span class="p">[</span><span class="s1">'from_description'</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span> <span class="o">==</span> <span class="n">df_living_space</span><span class="p">[</span><span class="s1">'living_space'</span><span class="p">])</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span>
+    <span class="s2">"Difference between living_space and from_description, where it is equal to living_space: "</span><span class="p">,</span>
+    <span class="n">df_living_space</span><span class="p">[</span><span class="s2">"living_space"</span><span class="p">]</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+    <span class="o">-</span> <span class="p">(</span>
+        <span class="n">df_living_space</span><span class="p">[</span><span class="s2">"from_description"</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+        <span class="o">==</span> <span class="n">df_living_space</span><span class="p">[</span><span class="s2">"living_space"</span><span class="p">]</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(),</span>
+<span class="p">)</span>
 </pre></div>
 
      </div>
@@ -15710,8 +15763,14 @@ Name: living_space, dtype: float64</pre>
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># display rows where 'living_space' is not Na but 'from_description' is Na</span>
-<span class="n">display</span><span class="p">(</span><span class="n">df_living_space</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df_living_space</span><span class="p">[</span><span class="s1">'living_space'</span><span class="p">]</span><span class="o">.</span><span class="n">notna</span><span class="p">()</span> <span class="o">&amp;</span> <span class="n">df_living_space</span><span class="p">[</span><span class="s1">'from_description'</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">(),</span> <span class="p">:])</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Display rows where 'living_space' is not Na but 'from_description' is Na</span>
+<span class="n">display</span><span class="p">(</span>
+    <span class="n">df_living_space</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span>
+        <span class="n">df_living_space</span><span class="p">[</span><span class="s2">"living_space"</span><span class="p">]</span><span class="o">.</span><span class="n">notna</span><span class="p">()</span>
+        <span class="o">&amp;</span> <span class="n">df_living_space</span><span class="p">[</span><span class="s2">"from_description"</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">(),</span>
+        <span class="p">:,</span>
+    <span class="p">]</span>
+<span class="p">)</span>
 </pre></div>
 
      </div>
@@ -15821,7 +15880,7 @@ Name: living_space, dtype: float64</pre>
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_living_space</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">'from_description'</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_living_space</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s2">"from_description"</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 
      </div>
@@ -15848,7 +15907,7 @@ Name: living_space, dtype: float64</pre>
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">'table count:'</span><span class="p">,</span> <span class="n">df_living_space</span><span class="p">[</span><span class="s1">'from_table'</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">())</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">"table count:"</span><span class="p">,</span> <span class="n">df_living_space</span><span class="p">[</span><span class="s2">"from_table"</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">())</span>
 </pre></div>
 
      </div>
@@ -15898,8 +15957,14 @@ Let's also check if there are any values for rows where <code>living_space</code
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_living_space</span><span class="p">[</span><span class="s1">'from_table'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_living_space</span><span class="p">[</span><span class="s1">'from_table'</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s1">'Count where from_table is not NA whereas living_space is: '</span><span class="p">,</span> <span class="n">df_living_space</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df_living_space</span><span class="p">[</span><span class="s1">'living_space'</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span> <span class="o">&amp;</span> <span class="n">df_living_space</span><span class="p">[</span><span class="s1">'from_table'</span><span class="p">]</span><span class="o">.</span><span class="n">notna</span><span class="p">(),</span> <span class="s1">'living_space'</span><span class="p">]</span><span class="o">.</span><span class="n">count</span><span class="p">())</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_living_space</span><span class="p">[</span><span class="s2">"from_table"</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_living_space</span><span class="p">[</span><span class="s2">"from_table"</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span>
+    <span class="s2">"Count where from_table is not NA whereas living_space is: "</span><span class="p">,</span>
+    <span class="n">df_living_space</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span>
+        <span class="n">df_living_space</span><span class="p">[</span><span class="s2">"living_space"</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span> <span class="o">&amp;</span> <span class="n">df_living_space</span><span class="p">[</span><span class="s2">"from_table"</span><span class="p">]</span><span class="o">.</span><span class="n">notna</span><span class="p">(),</span>
+        <span class="s2">"living_space"</span><span class="p">,</span>
+    <span class="p">]</span><span class="o">.</span><span class="n">count</span><span class="p">(),</span>
+<span class="p">)</span>
 </pre></div>
 
      </div>
@@ -15948,7 +16013,7 @@ Let's also check if there are any values for rows where <code>living_space</code
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_living_space</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">'from_table'</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_living_space</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s2">"from_table"</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 
      </div>
@@ -15975,8 +16040,8 @@ Let's also check if there are any values for rows where <code>living_space</code
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_living_space</span><span class="p">[</span><span class="s1">'from_details'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_living_space</span><span class="p">[</span><span class="s1">'from_details'</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
-<span class="n">df_living_space</span><span class="p">[</span><span class="s1">'from_details'</span><span class="p">]</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_living_space</span><span class="p">[</span><span class="s2">"from_details"</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_living_space</span><span class="p">[</span><span class="s2">"from_details"</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+<span class="n">df_living_space</span><span class="p">[</span><span class="s2">"from_details"</span><span class="p">]</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
 </pre></div>
 
      </div>
@@ -16022,7 +16087,7 @@ Name: from_details, dtype: float64</pre>
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p><code>from_details</code> contains more observations than <code>Space extracted</code> as we've seen. But this description shows that the max value in <code>from_details</code> is 9681 compared to 4390 in <code>Space extracted</code>. Upon manual inspection of the articles it becomes clear that the number extracted from <code>from_details</code> not always contains the <code>living_space</code> attribute, but sometimes also <code>plot_area</code> or <code>floor_space</code> and since there's no keyword to classify this value, we cannot use it.</p>
+<p><code>from_details</code> contains more observations than <code>Space extracted</code> as we've seen. But this description shows that the max value in <code>from_details</code> is 9681 compared to 4390 in <code>Space extracted</code>. Upon manual inspection of the articles it becomes clear that the number extracted from <code>from_details</code> not always contains the <code>living_space</code> attribute but sometimes also <code>plot_area</code> or <code>floor_space</code> and since there's no keyword to classify this value, we cannot use it.</p>
 
 </div>
 </div>
@@ -16035,7 +16100,7 @@ Name: from_details, dtype: float64</pre>
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_living_space</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">'from_details'</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_living_space</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s2">"from_details"</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 
      </div>
@@ -16062,7 +16127,10 @@ Name: from_details, dtype: float64</pre>
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">'details_structured count:'</span><span class="p">,</span> <span class="n">df_living_space</span><span class="p">[</span><span class="s1">'from_details_structured'</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">())</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span>
+    <span class="s2">"details_structured count:"</span><span class="p">,</span>
+    <span class="n">df_living_space</span><span class="p">[</span><span class="s2">"from_details_structured"</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">(),</span>
+<span class="p">)</span>
 </pre></div>
 
      </div>
@@ -16099,7 +16167,14 @@ Name: from_details, dtype: float64</pre>
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">'Count where from_details_structured is not NA whereas living_space is: '</span><span class="p">,</span> <span class="n">df_living_space</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df_living_space</span><span class="p">[</span><span class="s1">'living_space'</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span> <span class="o">&amp;</span> <span class="n">df_living_space</span><span class="p">[</span><span class="s1">'from_details_structured'</span><span class="p">]</span><span class="o">.</span><span class="n">notna</span><span class="p">(),</span> <span class="s1">'living_space'</span><span class="p">]</span><span class="o">.</span><span class="n">count</span><span class="p">())</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span>
+    <span class="s2">"Count where from_details_structured is not NA whereas living_space is: "</span><span class="p">,</span>
+    <span class="n">df_living_space</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span>
+        <span class="n">df_living_space</span><span class="p">[</span><span class="s2">"living_space"</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span>
+        <span class="o">&amp;</span> <span class="n">df_living_space</span><span class="p">[</span><span class="s2">"from_details_structured"</span><span class="p">]</span><span class="o">.</span><span class="n">notna</span><span class="p">(),</span>
+        <span class="s2">"living_space"</span><span class="p">,</span>
+    <span class="p">]</span><span class="o">.</span><span class="n">count</span><span class="p">(),</span>
+<span class="p">)</span>
 </pre></div>
 
      </div>
@@ -16148,7 +16223,7 @@ Name: from_details, dtype: float64</pre>
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_living_space</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">'from_details_structured'</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_living_space</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s2">"from_details_structured"</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 
      </div>
@@ -16394,11 +16469,15 @@ Name: from_details, dtype: float64</pre>
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">cols_rooms</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'rooms'</span><span class="p">]</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">cols_rooms</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"rooms"</span><span class="p">]</span>
 <span class="n">df_rooms</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">cols_rooms</span><span class="p">]</span>
-<span class="n">df_rooms</span><span class="p">[</span><span class="s1">'from_description'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">'description'</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="s1">'(\d+\.?\d?) rooms, '</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
-<span class="n">df_rooms</span><span class="p">[</span><span class="s1">'from_details'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">'details'</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="s1">'(\d+\.?\d?) rooms'</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
-<span class="n">df_rooms</span><span class="p">[</span><span class="s1">'from_details_structured'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">'details_structured'</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="s1">'(\d+\.?\d?) rooms'</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+<span class="n">df_rooms</span><span class="p">[</span><span class="s2">"from_description"</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">df</span><span class="p">[</span><span class="s2">"description"</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="s2">"(\d+\.?\d?) rooms, "</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="n">df_rooms</span><span class="p">[</span><span class="s2">"from_details"</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">"details"</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="s2">"(\d+\.?\d?) rooms"</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+<span class="n">df_rooms</span><span class="p">[</span><span class="s2">"from_details_structured"</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">df</span><span class="p">[</span><span class="s2">"details_structured"</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="s2">"(\d+\.?\d?) rooms"</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+<span class="p">)</span>
 </pre></div>
 
      </div>
@@ -16425,9 +16504,10 @@ Name: from_details, dtype: float64</pre>
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># sort columns by number of non-null values</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Sort columns by number of non-null values</span>
 <span class="n">df_rooms</span> <span class="o">=</span> <span class="n">df_rooms</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">df_rooms</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="c1"># create isna heatmap</span>
+
+<span class="c1"># Create isna heatmap</span>
 <span class="n">sns</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">df_rooms</span><span class="o">.</span><span class="n">isna</span><span class="p">(),</span> <span class="n">cbar</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
@@ -16470,7 +16550,7 @@ class="
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>This heatmap shows that <code>rooms</code> and <code>from_details</code> as well as <code>from_details_structured</code> apear to contain the most information on the feature rooms.</p>
+<p>This heatmap shows that <code>rooms</code> and <code>from_details</code> as well as <code>from_details_structured</code> appear to contain the most information on the feature rooms.</p>
 
 </div>
 </div>
@@ -16483,8 +16563,11 @@ class="
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># display rows where 'rooms' is na but 'from_details' is not</span>
-<span class="n">df_rooms</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df_rooms</span><span class="p">[</span><span class="s1">'from_details'</span><span class="p">]</span><span class="o">.</span><span class="n">notna</span><span class="p">()</span> <span class="o">&amp;</span> <span class="n">df_rooms</span><span class="p">[</span><span class="s1">'rooms'</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">(),</span> <span class="p">[</span><span class="s1">'from_details'</span><span class="p">,</span> <span class="s1">'rooms'</span><span class="p">]]</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Display rows where 'rooms' is na but 'from_details' is not</span>
+<span class="n">df_rooms</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span>
+    <span class="n">df_rooms</span><span class="p">[</span><span class="s2">"from_details"</span><span class="p">]</span><span class="o">.</span><span class="n">notna</span><span class="p">()</span> <span class="o">&amp;</span> <span class="n">df_rooms</span><span class="p">[</span><span class="s2">"rooms"</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">(),</span>
+    <span class="p">[</span><span class="s2">"from_details"</span><span class="p">,</span> <span class="s2">"rooms"</span><span class="p">],</span>
+<span class="p">]</span>
 </pre></div>
 
      </div>
@@ -16559,7 +16642,7 @@ class="
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_rooms</span><span class="p">[</span><span class="s1">'from_details'</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_rooms</span><span class="p">[</span><span class="s2">"from_details"</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
 </pre></div>
 
      </div>
@@ -16640,7 +16723,7 @@ Name: from_details, dtype: int64</pre>
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_rooms</span><span class="p">[</span><span class="s1">'from_details'</span><span class="p">]</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_rooms</span><span class="p">[</span><span class="s2">"from_details"</span><span class="p">]</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
 </pre></div>
 
      </div>
@@ -16679,7 +16762,7 @@ Name: from_details, dtype: int64</pre>
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_rooms</span><span class="p">[</span><span class="s1">'rooms'</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_rooms</span><span class="p">[</span><span class="s2">"rooms"</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
 </pre></div>
 
      </div>
@@ -16728,7 +16811,7 @@ Name: rooms, dtype: int64</pre>
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_rooms</span><span class="p">[</span><span class="s1">'rooms'</span><span class="p">]</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_rooms</span><span class="p">[</span><span class="s2">"rooms"</span><span class="p">]</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
 </pre></div>
 
      </div>
@@ -16779,7 +16862,7 @@ Name: rooms, dtype: int64</pre>
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_rooms</span><span class="p">[</span><span class="s1">'from_details_structured'</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_rooms</span><span class="p">[</span><span class="s2">"from_details_structured"</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
 </pre></div>
 
      </div>
@@ -16860,7 +16943,7 @@ Name: from_details_structured, dtype: int64</pre>
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_rooms</span><span class="p">[</span><span class="s1">'from_details_structured'</span><span class="p">]</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_rooms</span><span class="p">[</span><span class="s2">"from_details_structured"</span><span class="p">]</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
 </pre></div>
 
      </div>
@@ -16911,8 +16994,11 @@ Name: from_details_structured, dtype: int64</pre>
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># display rows where 'rooms' is na but 'from_details' is not</span>
-<span class="n">df_rooms</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df_rooms</span><span class="p">[</span><span class="s1">'from_details_structured'</span><span class="p">]</span><span class="o">.</span><span class="n">notna</span><span class="p">()</span> <span class="o">&amp;</span> <span class="n">df_rooms</span><span class="p">[</span><span class="s1">'from_details'</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">(),</span> <span class="p">[</span><span class="s1">'from_details_structured'</span><span class="p">,</span> <span class="s1">'from_details'</span><span class="p">]]</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Display rows where 'rooms' is na but 'from_details' is not</span>
+<span class="n">df_rooms</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span>
+    <span class="n">df_rooms</span><span class="p">[</span><span class="s2">"from_details_structured"</span><span class="p">]</span><span class="o">.</span><span class="n">notna</span><span class="p">()</span> <span class="o">&amp;</span> <span class="n">df_rooms</span><span class="p">[</span><span class="s2">"from_details"</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">(),</span>
+    <span class="p">[</span><span class="s2">"from_details_structured"</span><span class="p">,</span> <span class="s2">"from_details"</span><span class="p">],</span>
+<span class="p">]</span>
 </pre></div>
 
      </div>
@@ -16980,7 +17066,7 @@ Name: from_details_structured, dtype: int64</pre>
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="p">(</span><span class="n">df_rooms</span><span class="p">[</span><span class="s1">'from_details'</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span> <span class="o">==</span> <span class="n">df_rooms</span><span class="p">[</span><span class="s1">'from_details'</span><span class="p">])</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="p">(</span><span class="n">df_rooms</span><span class="p">[</span><span class="s2">"from_details"</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span> <span class="o">==</span> <span class="n">df_rooms</span><span class="p">[</span><span class="s2">"from_details"</span><span class="p">])</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
 </pre></div>
 
      </div>
@@ -17019,8 +17105,14 @@ Name: from_details_structured, dtype: int64</pre>
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_rooms</span><span class="p">[</span><span class="s1">'rooms'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_rooms</span><span class="p">[</span><span class="s1">'from_details_structured'</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
-<span class="n">df_rooms</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">'from_description'</span><span class="p">,</span> <span class="s1">'from_details'</span><span class="p">,</span> <span class="s1">'from_details_structured'</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_rooms</span><span class="p">[</span><span class="s2">"rooms"</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_rooms</span><span class="p">[</span><span class="s2">"from_details_structured"</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+
+<span class="c1"># Drop columns that are proven to be redundant</span>
+<span class="n">df_rooms</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span>
+    <span class="p">[</span><span class="s2">"from_description"</span><span class="p">,</span> <span class="s2">"from_details"</span><span class="p">,</span> <span class="s2">"from_details_structured"</span><span class="p">],</span>
+    <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
 </pre></div>
 
      </div>
@@ -17163,10 +17255,21 @@ Name: from_details_structured, dtype: int64</pre>
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">cols_plot_area</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'Plot area'</span><span class="p">,</span> <span class="s1">'Grundstücksfläche'</span><span class="p">,</span> <span class="s1">'Surface du terrain'</span><span class="p">,</span> <span class="s1">'Superficie del terreno'</span><span class="p">,</span> <span class="s1">'detail_responsive#surface_property'</span><span class="p">,</span> <span class="s1">'Plot_area_merged'</span><span class="p">]</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">cols_plot_area</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">"Plot area"</span><span class="p">,</span>
+    <span class="s2">"Grundstücksfläche"</span><span class="p">,</span>
+    <span class="s2">"Surface du terrain"</span><span class="p">,</span>
+    <span class="s2">"Superficie del terreno"</span><span class="p">,</span>
+    <span class="s2">"detail_responsive#surface_property"</span><span class="p">,</span>
+    <span class="s2">"Plot_area_merged"</span><span class="p">,</span>
+<span class="p">]</span>
 <span class="n">df_plot_area</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">cols_plot_area</span><span class="p">]</span>
-<span class="n">df_plot_area</span><span class="p">[</span><span class="s1">'from_table'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">'table'</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="s1">'Plot area&lt;\/td&gt;&lt;td .+?####.+?####&gt;(.+?)&lt;'</span><span class="p">)</span>
-<span class="n">df_plot_area</span><span class="p">[</span><span class="s1">'from_details_structured'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">'details_structured'</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="s2">"'Plot area': '(\d+) m"</span><span class="p">)</span>
+<span class="n">df_plot_area</span><span class="p">[</span><span class="s2">"from_table"</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">"table"</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span>
+    <span class="s2">"Plot area&lt;\/td&gt;&lt;td .+?####.+?####&gt;(.+?)&lt;"</span>
+<span class="p">)</span>
+<span class="n">df_plot_area</span><span class="p">[</span><span class="s2">"from_details_structured"</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">"details_structured"</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span>
+    <span class="s2">"'Plot area': '(\d+) m"</span>
+<span class="p">)</span>
 </pre></div>
 
      </div>
@@ -17193,9 +17296,12 @@ Name: from_details_structured, dtype: int64</pre>
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># sort columns by number of non-null values</span>
-<span class="n">df_plot_area</span> <span class="o">=</span> <span class="n">df_plot_area</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">df_plot_area</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="c1"># create isna heatmap</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Sort columns by number of non-null values</span>
+<span class="n">df_plot_area</span> <span class="o">=</span> <span class="n">df_plot_area</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span>
+    <span class="n">df_plot_area</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span>
+<span class="p">)</span>
+
+<span class="c1"># Create isna heatmap</span>
 <span class="n">sns</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">df_plot_area</span><span class="o">.</span><span class="n">isna</span><span class="p">(),</span> <span class="n">cbar</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
@@ -17251,7 +17357,9 @@ class="
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_plot_area</span><span class="p">[</span><span class="n">cols_plot_area</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">5</span><span class="p">]]</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="o">.</span><span class="n">cumsum</span><span class="p">()</span> <span class="o">==</span> <span class="n">df_plot_area</span><span class="p">[</span><span class="n">cols_plot_area</span><span class="p">[</span><span class="mi">5</span><span class="p">]]</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_plot_area</span><span class="p">[</span><span class="n">cols_plot_area</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">5</span><span class="p">]]</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="o">.</span><span class="n">cumsum</span><span class="p">()</span> <span class="o">==</span> <span class="n">df_plot_area</span><span class="p">[</span>
+    <span class="n">cols_plot_area</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span>
+<span class="p">]</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
 </pre></div>
 
      </div>
@@ -17295,14 +17403,18 @@ dtype: bool</pre>
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># merge columns except for 'Plot_area_merged' into 'plot_area'</span>
-<span class="n">df_plot_area</span><span class="p">[</span><span class="s1">'plot_area'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_plot_area</span><span class="p">[</span><span class="n">cols_plot_area</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s1">''</span><span class="p">)</span> <span class="o">+</span> \
-  <span class="p">(</span><span class="n">df_plot_area</span><span class="p">[</span><span class="n">cols_plot_area</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s1">''</span><span class="p">)</span> <span class="o">+</span> \
-  <span class="p">(</span><span class="n">df_plot_area</span><span class="p">[</span><span class="n">cols_plot_area</span><span class="p">[</span><span class="mi">2</span><span class="p">]])</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s1">''</span><span class="p">)</span> <span class="o">+</span> \
-  <span class="p">(</span><span class="n">df_plot_area</span><span class="p">[</span><span class="n">cols_plot_area</span><span class="p">[</span><span class="mi">3</span><span class="p">]])</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s1">''</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Merge columns except for 'Plot_area_merged' into 'plot_area'</span>
+<span class="n">df_plot_area</span><span class="p">[</span><span class="s2">"plot_area"</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">df_plot_area</span><span class="p">[</span><span class="n">cols_plot_area</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+    <span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">df_plot_area</span><span class="p">[</span><span class="n">cols_plot_area</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span>
+    <span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">df_plot_area</span><span class="p">[</span><span class="n">cols_plot_area</span><span class="p">[</span><span class="mi">2</span><span class="p">]])</span>
+    <span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">df_plot_area</span><span class="p">[</span><span class="n">cols_plot_area</span><span class="p">[</span><span class="mi">3</span><span class="p">]])</span>
+<span class="p">)</span>
 
-<span class="c1"># compare 'plot_area' with 'Plot_area_merged'</span>
-<span class="p">(</span><span class="n">df_plot_area</span><span class="p">[</span><span class="s1">'plot_area'</span><span class="p">]</span> <span class="o">==</span> <span class="n">df_plot_area</span><span class="p">[</span><span class="n">cols_plot_area</span><span class="p">[</span><span class="mi">5</span><span class="p">]]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s1">''</span><span class="p">))</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">==</span> <span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="c1"># Compare 'plot_area' with 'Plot_area_merged'</span>
+<span class="p">(</span>
+    <span class="n">df_plot_area</span><span class="p">[</span><span class="s2">"plot_area"</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s2">""</span><span class="p">)</span> <span class="o">==</span> <span class="n">df_plot_area</span><span class="p">[</span><span class="n">cols_plot_area</span><span class="p">[</span><span class="mi">5</span><span class="p">]]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s2">""</span><span class="p">)</span>
+<span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">==</span> <span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 </pre></div>
 
      </div>
@@ -17353,10 +17465,13 @@ dtype: bool</pre>
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># re replace empty strings with NaN in 'plot_area'</span>
-<span class="n">df_plot_area</span><span class="p">[</span><span class="s1">'plot_area'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_plot_area</span><span class="p">[</span><span class="s1">'plot_area'</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">''</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">NaN</span><span class="p">)</span>
-<span class="c1"># display rows where 'plot_area' is NaN but 'detail_responsive#surface_property' is not</span>
-<span class="n">display</span><span class="p">(</span><span class="n">df_plot_area</span><span class="p">[</span><span class="n">df_plot_area</span><span class="p">[</span><span class="s1">'plot_area'</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span> <span class="o">&amp;</span> <span class="n">df_plot_area</span><span class="p">[</span><span class="s2">"detail_responsive#surface_property"</span><span class="p">]</span><span class="o">.</span><span class="n">notna</span><span class="p">()])</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Display rows where 'plot_area' is NaN but 'detail_responsive#surface_property' is not</span>
+<span class="n">display</span><span class="p">(</span>
+    <span class="n">df_plot_area</span><span class="p">[</span>
+        <span class="n">df_plot_area</span><span class="p">[</span><span class="s2">"plot_area"</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span>
+        <span class="o">&amp;</span> <span class="n">df_plot_area</span><span class="p">[</span><span class="s2">"detail_responsive#surface_property"</span><span class="p">]</span><span class="o">.</span><span class="n">notna</span><span class="p">()</span>
+    <span class="p">]</span>
+<span class="p">)</span>
 </pre></div>
 
      </div>
@@ -17571,12 +17686,10 @@ dtype: bool</pre>
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># merge columns `Plot_area_merged` and `detail_responsive#surface_property` into `plot_area`</span>
-<span class="n">df_plot_area</span><span class="p">[</span><span class="s1">'plot_area'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_plot_area</span><span class="p">[</span><span class="n">cols_plot_area</span><span class="p">[</span><span class="mi">5</span><span class="p">]]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s1">''</span><span class="p">)</span> <span class="o">+</span> \
-  <span class="p">(</span><span class="n">df_plot_area</span><span class="p">[</span><span class="n">cols_plot_area</span><span class="p">[</span><span class="mi">4</span><span class="p">]])</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s1">''</span><span class="p">)</span>
-
-<span class="c1"># replace empty strings with NaN in 'plot_area'</span>
-<span class="n">df_plot_area</span><span class="p">[</span><span class="s1">'plot_area'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_plot_area</span><span class="p">[</span><span class="s1">'plot_area'</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">''</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Merge columns `Plot_area_merged` and `detail_responsive#surface_property` into `plot_area`</span>
+<span class="n">df_plot_area</span><span class="p">[</span><span class="s2">"plot_area"</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_plot_area</span><span class="p">[</span><span class="n">cols_plot_area</span><span class="p">[</span><span class="mi">5</span><span class="p">]]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span>
+    <span class="n">df_plot_area</span><span class="p">[</span><span class="n">cols_plot_area</span><span class="p">[</span><span class="mi">4</span><span class="p">]]</span>
+<span class="p">)</span>
 </pre></div>
 
      </div>
@@ -17592,7 +17705,7 @@ dtype: bool</pre>
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_plot_area</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> 
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_plot_area</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
 </pre></div>
 
      </div>
@@ -17641,8 +17754,8 @@ dtype: int64</pre>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_plot_area</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">cols_plot_area</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">5</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">df_plot_area</span><span class="p">[</span><span class="s1">'plot_area'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_plot_area</span><span class="p">[</span><span class="s1">'plot_area'</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">''</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="s1">'(\d+,?\d*)'</span><span class="p">)</span>
-<span class="n">df_plot_area</span><span class="p">[</span><span class="s1">'plot_area'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_plot_area</span><span class="p">[</span><span class="s1">'plot_area'</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">','</span><span class="p">,</span> <span class="s1">''</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+<span class="n">df_plot_area</span><span class="p">[</span><span class="s2">"plot_area"</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_plot_area</span><span class="p">[</span><span class="s2">"plot_area"</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="s2">"(\d+,?\d*)"</span><span class="p">)</span>
+<span class="n">df_plot_area</span><span class="p">[</span><span class="s2">"plot_area"</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_plot_area</span><span class="p">[</span><span class="s2">"plot_area"</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">","</span><span class="p">,</span> <span class="s2">""</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
 <span class="n">df_plot_area</span><span class="o">.</span><span class="n">plot_area</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
 </pre></div>
 
@@ -17723,11 +17836,22 @@ Name: plot_area, dtype: float64</pre>
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">cols_floor_space</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'Floor space'</span><span class="p">,</span> <span class="s1">'Nutzfläche'</span><span class="p">,</span> <span class="s1">'Surface utile'</span><span class="p">,</span> <span class="s1">'Superficie utile'</span><span class="p">,</span> <span class="s1">'detail_responsive#surface_usable'</span><span class="p">,</span> <span class="s1">'Floor_space_merged'</span><span class="p">]</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">cols_floor_space</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">"Floor space"</span><span class="p">,</span>
+    <span class="s2">"Nutzfläche"</span><span class="p">,</span>
+    <span class="s2">"Surface utile"</span><span class="p">,</span>
+    <span class="s2">"Superficie utile"</span><span class="p">,</span>
+    <span class="s2">"detail_responsive#surface_usable"</span><span class="p">,</span>
+    <span class="s2">"Floor_space_merged"</span><span class="p">,</span>
+<span class="p">]</span>
 <span class="n">df_floor_space</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">cols_floor_space</span><span class="p">]</span>
 
-<span class="n">df_floor_space</span><span class="p">[</span><span class="s1">'from_table'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">'table'</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="s1">'Floor space&lt;\/td&gt;&lt;td .+?####.+?####&gt;(.+?)&lt;'</span><span class="p">)</span>
-<span class="n">df_floor_space</span><span class="p">[</span><span class="s1">'from_details_structured'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">'details_structured'</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="s2">"'Floor space': '(\d+) m"</span><span class="p">)</span>
+<span class="n">df_floor_space</span><span class="p">[</span><span class="s2">"from_table"</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">"table"</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span>
+    <span class="s2">"Floor space&lt;\/td&gt;&lt;td .+?####.+?####&gt;(.+?)&lt;"</span>
+<span class="p">)</span>
+<span class="n">df_floor_space</span><span class="p">[</span><span class="s2">"from_details_structured"</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">"details_structured"</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span>
+    <span class="s2">"'Floor space': '(\d+) m"</span>
+<span class="p">)</span>
 </pre></div>
 
      </div>
@@ -17754,9 +17878,12 @@ Name: plot_area, dtype: float64</pre>
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># sort columns by number of non-null values</span>
-<span class="n">df_floor_space</span> <span class="o">=</span> <span class="n">df_floor_space</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">df_floor_space</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="c1"># create isna heatmap</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Sort columns by number of non-null values</span>
+<span class="n">df_floor_space</span> <span class="o">=</span> <span class="n">df_floor_space</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span>
+    <span class="n">df_floor_space</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span>
+<span class="p">)</span>
+
+<span class="c1"># Create isna heatmap</span>
 <span class="n">sns</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">df_floor_space</span><span class="o">.</span><span class="n">isna</span><span class="p">(),</span> <span class="n">cbar</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
@@ -17812,7 +17939,9 @@ class="
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_floor_space</span><span class="p">[</span><span class="n">cols_floor_space</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">5</span><span class="p">]]</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="o">.</span><span class="n">cumsum</span><span class="p">()</span> <span class="o">==</span> <span class="n">df_floor_space</span><span class="p">[</span><span class="n">cols_floor_space</span><span class="p">[</span><span class="mi">5</span><span class="p">]]</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_floor_space</span><span class="p">[</span><span class="n">cols_floor_space</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">5</span><span class="p">]]</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="o">.</span><span class="n">cumsum</span><span class="p">()</span> <span class="o">==</span> <span class="n">df_floor_space</span><span class="p">[</span>
+    <span class="n">cols_floor_space</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span>
+<span class="p">]</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
 </pre></div>
 
      </div>
@@ -17856,14 +17985,19 @@ dtype: bool</pre>
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># merge columns except for 'Floor_space_merged' into 'floor_space'</span>
-<span class="n">df_floor_space</span><span class="p">[</span><span class="s1">'floor_space'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_floor_space</span><span class="p">[</span><span class="n">cols_floor_space</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s1">''</span><span class="p">)</span> <span class="o">+</span> \
-  <span class="p">(</span><span class="n">df_floor_space</span><span class="p">[</span><span class="n">cols_floor_space</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s1">''</span><span class="p">)</span> <span class="o">+</span> \
-  <span class="p">(</span><span class="n">df_floor_space</span><span class="p">[</span><span class="n">cols_floor_space</span><span class="p">[</span><span class="mi">2</span><span class="p">]])</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s1">''</span><span class="p">)</span> <span class="o">+</span> \
-  <span class="p">(</span><span class="n">df_floor_space</span><span class="p">[</span><span class="n">cols_floor_space</span><span class="p">[</span><span class="mi">3</span><span class="p">]])</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s1">''</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Merge columns except for 'Floor_space_merged' into 'floor_space'</span>
+<span class="n">df_floor_space</span><span class="p">[</span><span class="s2">"floor_space"</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">df_floor_space</span><span class="p">[</span><span class="n">cols_floor_space</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+    <span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">df_floor_space</span><span class="p">[</span><span class="n">cols_floor_space</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span>
+    <span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">df_floor_space</span><span class="p">[</span><span class="n">cols_floor_space</span><span class="p">[</span><span class="mi">2</span><span class="p">]])</span>
+    <span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">df_floor_space</span><span class="p">[</span><span class="n">cols_floor_space</span><span class="p">[</span><span class="mi">3</span><span class="p">]])</span>
+<span class="p">)</span>
 
-<span class="c1"># compare 'floor_space' with 'Floor_space_merged'</span>
-<span class="p">(</span><span class="n">df_floor_space</span><span class="p">[</span><span class="s1">'floor_space'</span><span class="p">]</span> <span class="o">==</span> <span class="n">df_floor_space</span><span class="p">[</span><span class="n">cols_floor_space</span><span class="p">[</span><span class="mi">5</span><span class="p">]]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s1">''</span><span class="p">))</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">==</span> <span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="c1"># Compare 'floor_space' with 'Floor_space_merged'</span>
+<span class="p">(</span>
+    <span class="n">df_floor_space</span><span class="p">[</span><span class="s2">"floor_space"</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s2">""</span><span class="p">)</span>
+    <span class="o">==</span> <span class="n">df_floor_space</span><span class="p">[</span><span class="n">cols_floor_space</span><span class="p">[</span><span class="mi">5</span><span class="p">]]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s2">""</span><span class="p">)</span>
+<span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">==</span> <span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 </pre></div>
 
      </div>
@@ -17914,10 +18048,13 @@ dtype: bool</pre>
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># re replace empty strings with NaN in 'floor_space'</span>
-<span class="n">df_floor_space</span><span class="p">[</span><span class="s1">'floor_space'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_floor_space</span><span class="p">[</span><span class="s1">'floor_space'</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">''</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">NaN</span><span class="p">)</span>
-<span class="c1"># display rows where 'floor_space' is NaN but 'detail_responsive#surface_usable' is not</span>
-<span class="n">display</span><span class="p">(</span><span class="n">df_floor_space</span><span class="p">[</span><span class="n">df_floor_space</span><span class="p">[</span><span class="s1">'floor_space'</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span> <span class="o">&amp;</span> <span class="n">df_floor_space</span><span class="p">[</span><span class="s2">"detail_responsive#surface_usable"</span><span class="p">]</span><span class="o">.</span><span class="n">notna</span><span class="p">()])</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Display rows where 'floor_space' is NaN but 'detail_responsive#surface_usable' is not</span>
+<span class="n">display</span><span class="p">(</span>
+    <span class="n">df_floor_space</span><span class="p">[</span>
+        <span class="n">df_floor_space</span><span class="p">[</span><span class="s2">"floor_space"</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span>
+        <span class="o">&amp;</span> <span class="n">df_floor_space</span><span class="p">[</span><span class="s2">"detail_responsive#surface_usable"</span><span class="p">]</span><span class="o">.</span><span class="n">notna</span><span class="p">()</span>
+    <span class="p">]</span>
+<span class="p">)</span>
 </pre></div>
 
      </div>
@@ -18133,10 +18270,9 @@ dtype: bool</pre>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># merge columns `Floor_space_merged` and `detail_responsive#surface_usable` into `floor_space`</span>
-<span class="n">df_floor_space</span><span class="p">[</span><span class="s1">'floor_space'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_floor_space</span><span class="p">[</span><span class="n">cols_floor_space</span><span class="p">[</span><span class="mi">5</span><span class="p">]]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s1">''</span><span class="p">)</span> <span class="o">+</span> \
-  <span class="p">(</span><span class="n">df_floor_space</span><span class="p">[</span><span class="n">cols_floor_space</span><span class="p">[</span><span class="mi">4</span><span class="p">]])</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s1">''</span><span class="p">)</span>
-
-<span class="n">df_floor_space</span><span class="p">[</span><span class="s1">'floor_space'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_floor_space</span><span class="p">[</span><span class="s1">'floor_space'</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">''</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+<span class="n">df_floor_space</span><span class="p">[</span><span class="s2">"floor_space"</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_floor_space</span><span class="p">[</span><span class="n">cols_floor_space</span><span class="p">[</span><span class="mi">5</span><span class="p">]]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span>
+    <span class="n">df_floor_space</span><span class="p">[</span><span class="n">cols_floor_space</span><span class="p">[</span><span class="mi">4</span><span class="p">]]</span>
+<span class="p">)</span>
 </pre></div>
 
      </div>
@@ -18200,9 +18336,22 @@ dtype: int64</pre>
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># parsing and cleaning</span>
-<span class="n">df_floor_space</span><span class="p">[</span><span class="s1">'floor_space'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_floor_space</span><span class="o">.</span><span class="n">floor_space</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="s1">'(\d+)'</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
-<span class="n">df_floor_space</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">'Floor space'</span><span class="p">,</span> <span class="s1">'Nutzfläche'</span><span class="p">,</span> <span class="s1">'Surface utile'</span><span class="p">,</span> <span class="s1">'Superficie utile'</span><span class="p">,</span> <span class="s1">'detail_responsive#surface_usable'</span><span class="p">,</span> <span class="s1">'Floor_space_merged'</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Parsing and cleaning</span>
+<span class="n">df_floor_space</span><span class="p">[</span><span class="s2">"floor_space"</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_floor_space</span><span class="o">.</span><span class="n">floor_space</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="s2">"(\d+)"</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span>
+    <span class="nb">float</span>
+<span class="p">)</span>
+<span class="n">df_floor_space</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span>
+    <span class="p">[</span>
+        <span class="s2">"Floor space"</span><span class="p">,</span>
+        <span class="s2">"Nutzfläche"</span><span class="p">,</span>
+        <span class="s2">"Surface utile"</span><span class="p">,</span>
+        <span class="s2">"Superficie utile"</span><span class="p">,</span>
+        <span class="s2">"detail_responsive#surface_usable"</span><span class="p">,</span>
+        <span class="s2">"Floor_space_merged"</span><span class="p">,</span>
+    <span class="p">],</span>
+    <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="n">df_floor_space</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
 </pre></div>
 
@@ -18330,11 +18479,20 @@ dtype: int64</pre>
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">cols_floor</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'Floor'</span><span class="p">,</span> <span class="s1">'Stockwerk'</span><span class="p">,</span> <span class="s1">'Étage'</span><span class="p">,</span> <span class="s1">'Piano'</span><span class="p">,</span> <span class="s1">'detail_responsive#floor'</span><span class="p">,</span> <span class="s1">'Floor_merged'</span><span class="p">]</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">cols_floor</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">"Floor"</span><span class="p">,</span>
+    <span class="s2">"Stockwerk"</span><span class="p">,</span>
+    <span class="s2">"Étage"</span><span class="p">,</span>
+    <span class="s2">"Piano"</span><span class="p">,</span>
+    <span class="s2">"detail_responsive#floor"</span><span class="p">,</span>
+    <span class="s2">"Floor_merged"</span><span class="p">,</span>
+<span class="p">]</span>
 <span class="n">df_floor</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">cols_floor</span><span class="p">]</span>
 
-<span class="n">df_floor</span><span class="p">[</span><span class="s1">'from_table'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">'table'</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="s1">'Floor&lt;\/td&gt;&lt;td .+?####.+?####&gt;(.+?)&lt;'</span><span class="p">)</span>
-<span class="n">df_floor</span><span class="p">[</span><span class="s1">'from_details_structured'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">'details_structured'</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="s2">"'Floor': '(.+?)'"</span><span class="p">)</span>
+<span class="n">df_floor</span><span class="p">[</span><span class="s2">"from_table"</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">"table"</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="s2">"Floor&lt;\/td&gt;&lt;td .+?####.+?####&gt;(.+?)&lt;"</span><span class="p">)</span>
+<span class="n">df_floor</span><span class="p">[</span><span class="s2">"from_details_structured"</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">"details_structured"</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span>
+    <span class="s2">"'Floor': '(.+?)'"</span>
+<span class="p">)</span>
 </pre></div>
 
      </div>
@@ -18361,9 +18519,10 @@ dtype: int64</pre>
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># sort columns by number of non-null values</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Sort columns by number of non-null values</span>
 <span class="n">df_floor</span> <span class="o">=</span> <span class="n">df_floor</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">df_floor</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="c1"># create isna heatmap</span>
+
+<span class="c1"># Create isna heatmap</span>
 <span class="n">sns</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">df_floor</span><span class="o">.</span><span class="n">isna</span><span class="p">(),</span> <span class="n">cbar</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
@@ -18463,14 +18622,18 @@ dtype: bool</pre>
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># merge columns except for 'Floor_merged' into 'floor_'</span>
-<span class="n">df_floor</span><span class="p">[</span><span class="s1">'floor'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_floor</span><span class="p">[</span><span class="n">cols_floor</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s1">''</span><span class="p">)</span> <span class="o">+</span> \
-  <span class="p">(</span><span class="n">df_floor</span><span class="p">[</span><span class="n">cols_floor</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s1">''</span><span class="p">)</span> <span class="o">+</span> \
-  <span class="p">(</span><span class="n">df_floor</span><span class="p">[</span><span class="n">cols_floor</span><span class="p">[</span><span class="mi">2</span><span class="p">]])</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s1">''</span><span class="p">)</span> <span class="o">+</span> \
-  <span class="p">(</span><span class="n">df_floor</span><span class="p">[</span><span class="n">cols_floor</span><span class="p">[</span><span class="mi">3</span><span class="p">]])</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s1">''</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Merge columns except for 'Floor_merged' into 'floor_'</span>
+<span class="n">df_floor</span><span class="p">[</span><span class="s2">"floor"</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">df_floor</span><span class="p">[</span><span class="n">cols_floor</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+    <span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">df_floor</span><span class="p">[</span><span class="n">cols_floor</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span>
+    <span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">df_floor</span><span class="p">[</span><span class="n">cols_floor</span><span class="p">[</span><span class="mi">2</span><span class="p">]])</span>
+    <span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">df_floor</span><span class="p">[</span><span class="n">cols_floor</span><span class="p">[</span><span class="mi">3</span><span class="p">]])</span>
+<span class="p">)</span>
 
-<span class="c1"># compare 'floor' with 'Floor_merged'</span>
-<span class="p">(</span><span class="n">df_floor</span><span class="p">[</span><span class="s1">'floor'</span><span class="p">]</span> <span class="o">==</span> <span class="n">df_floor</span><span class="p">[</span><span class="n">cols_floor</span><span class="p">[</span><span class="mi">5</span><span class="p">]]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s1">''</span><span class="p">))</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">==</span> <span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="c1"># Compare 'floor' with 'Floor_merged'</span>
+<span class="p">(</span><span class="n">df_floor</span><span class="p">[</span><span class="s2">"floor"</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s2">""</span><span class="p">)</span> <span class="o">==</span> <span class="n">df_floor</span><span class="p">[</span><span class="n">cols_floor</span><span class="p">[</span><span class="mi">5</span><span class="p">]]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s2">""</span><span class="p">))</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">==</span> <span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span>
+    <span class="mi">0</span>
+<span class="p">]</span>
 </pre></div>
 
      </div>
@@ -18521,10 +18684,10 @@ dtype: bool</pre>
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># re replace empty strings with NaN in 'floor'</span>
-<span class="n">df_floor</span><span class="p">[</span><span class="s1">'floor'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_floor</span><span class="p">[</span><span class="s1">'floor'</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">''</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">NaN</span><span class="p">)</span>
-<span class="c1"># display rows where 'floor_space' is NaN but 'detail_responsive#surface_usable' is not</span>
-<span class="n">display</span><span class="p">(</span><span class="n">df_floor</span><span class="p">[</span><span class="n">df_floor</span><span class="p">[</span><span class="s1">'floor'</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span> <span class="o">&amp;</span> <span class="n">df_floor</span><span class="p">[</span><span class="s2">"detail_responsive#floor"</span><span class="p">]</span><span class="o">.</span><span class="n">notna</span><span class="p">()])</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Display rows where 'floor_space' is NaN but 'detail_responsive#surface_usable' is not</span>
+<span class="n">display</span><span class="p">(</span>
+    <span class="n">df_floor</span><span class="p">[</span><span class="n">df_floor</span><span class="p">[</span><span class="s2">"floor"</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span> <span class="o">&amp;</span> <span class="n">df_floor</span><span class="p">[</span><span class="s2">"detail_responsive#floor"</span><span class="p">]</span><span class="o">.</span><span class="n">notna</span><span class="p">()]</span>
+<span class="p">)</span>
 </pre></div>
 
      </div>
@@ -18739,11 +18902,8 @@ dtype: bool</pre>
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># merge columns `Floor_merged` and `detail_responsive#floor` into `floor`</span>
-<span class="n">df_floor</span><span class="p">[</span><span class="s1">'floor'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_floor</span><span class="p">[</span><span class="n">cols_floor</span><span class="p">[</span><span class="mi">5</span><span class="p">]]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s1">''</span><span class="p">)</span> <span class="o">+</span> \
-  <span class="p">(</span><span class="n">df_floor</span><span class="p">[</span><span class="n">cols_floor</span><span class="p">[</span><span class="mi">4</span><span class="p">]])</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s1">''</span><span class="p">)</span>
-
-<span class="n">df_floor</span><span class="p">[</span><span class="s1">'floor'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_floor</span><span class="p">[</span><span class="s1">'floor'</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">''</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Merge columns `Floor_merged` and `detail_responsive#floor` into `floor`</span>
+<span class="n">df_floor</span><span class="p">[</span><span class="s2">"floor"</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_floor</span><span class="p">[</span><span class="n">cols_floor</span><span class="p">[</span><span class="mi">5</span><span class="p">]]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">df_floor</span><span class="p">[</span><span class="n">cols_floor</span><span class="p">[</span><span class="mi">4</span><span class="p">]])</span>
 </pre></div>
 
      </div>
@@ -18807,7 +18967,20 @@ dtype: int64</pre>
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_floor</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">'Floor'</span><span class="p">,</span> <span class="s1">'Stockwerk'</span><span class="p">,</span> <span class="s1">'Étage'</span><span class="p">,</span> <span class="s1">'Piano'</span><span class="p">,</span> <span class="s1">'detail_responsive#floor'</span><span class="p">,</span> <span class="s1">'Floor_merged'</span><span class="p">,</span> <span class="s1">'from_table'</span><span class="p">,</span> <span class="s1">'from_details_structured'</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_floor</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span>
+    <span class="p">[</span>
+        <span class="s2">"Floor"</span><span class="p">,</span>
+        <span class="s2">"Stockwerk"</span><span class="p">,</span>
+        <span class="s2">"Étage"</span><span class="p">,</span>
+        <span class="s2">"Piano"</span><span class="p">,</span>
+        <span class="s2">"detail_responsive#floor"</span><span class="p">,</span>
+        <span class="s2">"Floor_merged"</span><span class="p">,</span>
+        <span class="s2">"from_table"</span><span class="p">,</span>
+        <span class="s2">"from_details_structured"</span><span class="p">,</span>
+    <span class="p">],</span>
+    <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
 </pre></div>
 
      </div>
@@ -18853,10 +19026,10 @@ dtype: int64</pre>
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">cols_price</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'price'</span><span class="p">,</span> <span class="s1">'price_cleaned'</span><span class="p">]</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">cols_price</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"price"</span><span class="p">,</span> <span class="s2">"price_cleaned"</span><span class="p">]</span>
 <span class="n">df_price</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">cols_price</span><span class="p">]</span>
 
-<span class="n">df_price</span><span class="p">[</span><span class="s1">'from_description'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">'description'</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="s1">'CHF ([\d.,]+)'</span><span class="p">)</span>
+<span class="n">df_price</span><span class="p">[</span><span class="s2">"from_description"</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">"description"</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="s2">"CHF ([\d.,]+)"</span><span class="p">)</span>
 </pre></div>
 
      </div>
@@ -18883,9 +19056,10 @@ dtype: int64</pre>
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># sort columns by number of non-null values</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Sort columns by number of non-null values</span>
 <span class="n">df_price</span> <span class="o">=</span> <span class="n">df_price</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">df_price</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="c1"># create isna heatmap</span>
+
+<span class="c1"># Create isna heatmap</span>
 <span class="n">sns</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">df_price</span><span class="o">.</span><span class="n">isna</span><span class="p">(),</span> <span class="n">cbar</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
@@ -18941,8 +19115,8 @@ class="
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># display rows where 'price' is not Na but 'price_cleaned' is</span>
-<span class="n">display</span><span class="p">(</span><span class="n">df_price</span><span class="p">[</span><span class="n">df_price</span><span class="p">[</span><span class="s1">'price_cleaned'</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span> <span class="o">&amp;</span> <span class="n">df_price</span><span class="p">[</span><span class="s2">"price"</span><span class="p">]</span><span class="o">.</span><span class="n">notna</span><span class="p">()])</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Display rows where 'price' is not Na but 'price_cleaned' is</span>
+<span class="n">display</span><span class="p">(</span><span class="n">df_price</span><span class="p">[</span><span class="n">df_price</span><span class="p">[</span><span class="s2">"price_cleaned"</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span> <span class="o">&amp;</span> <span class="n">df_price</span><span class="p">[</span><span class="s2">"price"</span><span class="p">]</span><span class="o">.</span><span class="n">notna</span><span class="p">()])</span>
 </pre></div>
 
      </div>
@@ -19085,8 +19259,13 @@ class="
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_price</span><span class="p">[</span><span class="s1">'price'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_price</span><span class="p">[</span><span class="s1">'price'</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="s1">'CHF ([\d,]+)'</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">','</span><span class="p">,</span> <span class="s1">''</span><span class="p">,</span> <span class="n">regex</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
-<span class="n">df_price</span><span class="p">[</span><span class="s1">'price'</span><span class="p">]</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">-</span> <span class="n">df_price</span><span class="p">[</span><span class="s1">'price_cleaned'</span><span class="p">]</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_price</span><span class="p">[</span><span class="s2">"price"</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">df_price</span><span class="p">[</span><span class="s2">"price"</span><span class="p">]</span>
+    <span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="s2">"CHF ([\d,]+)"</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">","</span><span class="p">,</span> <span class="s2">""</span><span class="p">,</span> <span class="n">regex</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="n">df_price</span><span class="p">[</span><span class="s2">"price"</span><span class="p">]</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">-</span> <span class="n">df_price</span><span class="p">[</span><span class="s2">"price_cleaned"</span><span class="p">]</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
 </pre></div>
 
      </div>
@@ -19137,8 +19316,13 @@ class="
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_price</span><span class="p">[</span><span class="s1">'from_description'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_price</span><span class="p">[</span><span class="s1">'from_description'</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="s1">'([\d,]+)'</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">','</span><span class="p">,</span> <span class="s1">''</span><span class="p">,</span> <span class="n">regex</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
-<span class="n">df_price</span><span class="p">[</span><span class="s1">'from_description'</span><span class="p">]</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">-</span> <span class="n">df_price</span><span class="p">[</span><span class="s1">'price_cleaned'</span><span class="p">]</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_price</span><span class="p">[</span><span class="s2">"from_description"</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">df_price</span><span class="p">[</span><span class="s2">"from_description"</span><span class="p">]</span>
+    <span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="s2">"([\d,]+)"</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">","</span><span class="p">,</span> <span class="s2">""</span><span class="p">,</span> <span class="n">regex</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="n">df_price</span><span class="p">[</span><span class="s2">"from_description"</span><span class="p">]</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> <span class="o">-</span> <span class="n">df_price</span><span class="p">[</span><span class="s2">"price_cleaned"</span><span class="p">]</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
 </pre></div>
 
      </div>
@@ -19189,7 +19373,7 @@ class="
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_price</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">'price'</span><span class="p">,</span> <span class="s1">'from_description'</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_price</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s2">"price"</span><span class="p">,</span> <span class="s2">"from_description"</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 
      </div>
@@ -19328,7 +19512,7 @@ class="
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">cols_coord</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'lat'</span><span class="p">,</span> <span class="s1">'lon'</span><span class="p">,</span> <span class="s1">'Latitude'</span><span class="p">,</span> <span class="s1">'Longitude'</span><span class="p">]</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">cols_coord</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"lat"</span><span class="p">,</span> <span class="s2">"lon"</span><span class="p">,</span> <span class="s2">"Latitude"</span><span class="p">,</span> <span class="s2">"Longitude"</span><span class="p">]</span>
 <span class="n">df_coord</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">cols_coord</span><span class="p">]</span>
 </pre></div>
 

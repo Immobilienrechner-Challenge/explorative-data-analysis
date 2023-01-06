@@ -14593,7 +14593,7 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h1 id="Purpose">Purpose<a class="anchor-link" href="#Purpose">&#182;</a></h1><p>The Purpose of this Notebook is to consolidate categorical features from <code>immoscout_cleaned_lat_lon_fixed_v9.csv</code> in one column each.</p>
+<h1 id="Purpose">Purpose<a class="anchor-link" href="#Purpose">&#182;</a></h1><p>The purpose of this Notebook is to consolidate categorical features from <code>data/immo_data_202208.csv</code> in one column each.</p>
 
 </div>
 </div>
@@ -14605,13 +14605,13 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h1 id="Summary">Summary<a class="anchor-link" href="#Summary">&#182;</a></h1><p>| Feature       | Complete Data found in/with                                                               | 
-| ------------- | ----------------------------------------------------------------------------------------- |
-| Municipality  | RegEx <code>address</code> with <code>\d{4} (.+?),</code>                                                       |
-| Zip Code      | RegEx <code>address</code> with <code>(\d{4}) [A-ZÀ-Ÿ]</code>                                                   | 
-| Canton        | RegEx <code>address</code> <code>, ?([A-ZÀ-Ÿ]{2})</code>                                                        | 
-| Street        | RegEx <code>address</code> <code>(.+), \d{4}</code>, drop 3874 and set street from 12362 to <code>Rte de la Jorette</code> |
-| Street Number | RegEx <code>^.+ (\d.+)</code> from above prepared <code>street</code>                                           |
+<h1 id="Summary">Summary<a class="anchor-link" href="#Summary">&#182;</a></h1><p>| Feature       | Complete Data found in/with                                                               |<br />
+| ------------- | ----------------------------------------------------------------------------------------- |<br />
+| Municipality  | RegEx <code>address</code> with <code>\d{4} (.+?),</code>                                                       |<br />
+| Zip Code      | RegEx <code>address</code> with <code>(\d{4}) [A-ZÀ-Ÿ]</code>                                                   |<br />
+| Canton        | RegEx <code>address</code> <code>, ?([A-ZÀ-Ÿ]{2})</code>                                                        |<br />
+| Street        | RegEx <code>address</code> <code>(.+), \d{4}</code>, drop 3874 and set street from 12362 to <code>Rte de la Jorette</code> |<br />
+| Street Number | RegEx <code>^.+ (\d.+)</code> from above prepared <code>street</code>                                           |<br />
 | Availability  | Join <code>Availability_merged</code> and <code>detail_responsive#available_from</code>                         |</p>
 
 </div>
@@ -14632,6 +14632,9 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 <span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">"ignore"</span><span class="p">)</span>
 </pre></div>
 
      </div>
@@ -14648,7 +14651,10 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># import DataFarme</span>
-<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">"https://raw.githubusercontent.com/Immobilienrechner-Challenge/data/main/immoscout_cleaned_lat_lon_fixed_v9.csv"</span><span class="p">,</span> <span class="n">low_memory</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span>
+    <span class="s2">"https://raw.githubusercontent.com/Immobilienrechner-Challenge/data/main/immo_data_202208.csv"</span><span class="p">,</span>
+    <span class="n">low_memory</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span>
 </pre></div>
 
      </div>
@@ -14663,7 +14669,7 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<h1 id="Address">Address<a class="anchor-link" href="#Address">&#182;</a></h1><p>We discovered that the following columns containing information about the address of an object:</p>
+<h1 id="Address">Address<a class="anchor-link" href="#Address">&#182;</a></h1><p>We discovered that the following columns contain information about the address of an object:</p>
 <ul>
 <li><code>Commune</code></li>
 <li><code>Comune</code></li>
@@ -14692,7 +14698,19 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Select relevant columns</span>
-<span class="n">cols_address</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'Municipality'</span><span class="p">,</span> <span class="s1">'Gemeinde'</span><span class="p">,</span> <span class="s1">'Commune'</span><span class="p">,</span> <span class="s1">'Comune'</span><span class="p">,</span> <span class="s1">'detail_responsive#municipality'</span><span class="p">,</span> <span class="s1">'Municipality_merged'</span><span class="p">,</span> <span class="s1">'location'</span><span class="p">,</span> <span class="s1">'location_parsed'</span><span class="p">,</span> <span class="s1">'address'</span><span class="p">,</span> <span class="s1">'Locality'</span><span class="p">,</span> <span class="s1">'Zip'</span><span class="p">]</span>
+<span class="n">cols_address</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">"Municipality"</span><span class="p">,</span>
+    <span class="s2">"Gemeinde"</span><span class="p">,</span>
+    <span class="s2">"Commune"</span><span class="p">,</span>
+    <span class="s2">"Comune"</span><span class="p">,</span>
+    <span class="s2">"detail_responsive#municipality"</span><span class="p">,</span>
+    <span class="s2">"Municipality_merged"</span><span class="p">,</span>
+    <span class="s2">"location"</span><span class="p">,</span>
+    <span class="s2">"location_parsed"</span><span class="p">,</span>
+    <span class="s2">"address"</span><span class="p">,</span>
+    <span class="s2">"Locality"</span><span class="p">,</span>
+    <span class="s2">"Zip"</span><span class="p">,</span>
+<span class="p">]</span>
 <span class="n">df_address</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">cols_address</span><span class="p">]</span>
 </pre></div>
 
@@ -14960,17 +14978,36 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># RegEx to extract municipality and postal code</span>
-<span class="c1"># Municipality</span>
-<span class="n">df_address</span><span class="p">[</span><span class="s1">'municip_from_table'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">'table'</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="s2">"Municipality.+?rJZBK####&gt;(.+?)&lt;\/td&gt;"</span><span class="p">)</span>
-<span class="n">df_address</span><span class="p">[</span><span class="s1">'municip_from_details_structured'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">'details_structured'</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="s2">"'Municipality': ?'(.+?)'"</span><span class="p">)</span>
-<span class="n">df_address</span><span class="p">[</span><span class="s1">'municip_from_location'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_address</span><span class="p">[</span><span class="s1">'location'</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="sa">r</span><span class="s2">"\d</span><span class="si">{4}</span><span class="s2"> (.+?),"</span><span class="p">)</span>
-<span class="n">df_address</span><span class="p">[</span><span class="s1">'municip_from_address'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_address</span><span class="p">[</span><span class="s1">'address'</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="sa">r</span><span class="s2">"\d</span><span class="si">{4}</span><span class="s2"> (.+?),"</span><span class="p">)</span>
-<span class="n">df_address</span><span class="p">[</span><span class="s1">'municip_from_location_parsed'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_address</span><span class="p">[</span><span class="s1">'location_parsed'</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="sa">r</span><span class="s2">"Stadt: ?(.+?) K"</span><span class="p">)</span>
+
+<span class="c1"># municipality</span>
+<span class="c1"># From table</span>
+<span class="n">df_address</span><span class="p">[</span><span class="s2">"municip_from_table"</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">"table"</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span>
+    <span class="s2">"Municipality.+?rJZBK####&gt;(.+?)&lt;\/td&gt;"</span>
+<span class="p">)</span>
+<span class="c1"># From details_structured</span>
+<span class="n">df_address</span><span class="p">[</span><span class="s2">"municip_from_details_structured"</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">"details_structured"</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span>
+    <span class="s2">"'Municipality': ?'(.+?)'"</span>
+<span class="p">)</span>
+<span class="c1"># From location</span>
+<span class="n">df_address</span><span class="p">[</span><span class="s2">"municip_from_location"</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_address</span><span class="p">[</span><span class="s2">"location"</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span>
+    <span class="sa">r</span><span class="s2">"\d</span><span class="si">{4}</span><span class="s2"> (.+?),"</span>
+<span class="p">)</span>
+<span class="c1"># From address</span>
+<span class="n">df_address</span><span class="p">[</span><span class="s2">"municip_from_address"</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_address</span><span class="p">[</span><span class="s2">"address"</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="sa">r</span><span class="s2">"\d</span><span class="si">{4}</span><span class="s2"> (.+?),"</span><span class="p">)</span>
+<span class="c1"># From location_parsed</span>
+<span class="n">df_address</span><span class="p">[</span><span class="s2">"municip_from_location_parsed"</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_address</span><span class="p">[</span><span class="s2">"location_parsed"</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span>
+    <span class="sa">r</span><span class="s2">"Stadt: ?(.+?) K"</span>
+<span class="p">)</span>
 
 <span class="c1"># Postal code</span>
-<span class="n">df_address</span><span class="p">[</span><span class="s1">'plz_from_address'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">'address'</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="sa">r</span><span class="s2">"(\d</span><span class="si">{4}</span><span class="s2">) [A-ZÀ-Ÿ]"</span><span class="p">)</span>
-<span class="n">df_address</span><span class="p">[</span><span class="s1">'plz_from_location'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">'location'</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="s2">"(\d</span><span class="si">{4}</span><span class="s2">) [A-ZÀ-Ÿ]"</span><span class="p">)</span>
-<span class="n">df_address</span><span class="p">[</span><span class="s1">'plz_from_location_parsed'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">'location_parsed'</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="s2">"plz: ?(\d+)"</span><span class="p">)</span>
+<span class="c1"># From address</span>
+<span class="n">df_address</span><span class="p">[</span><span class="s2">"plz_from_address"</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">"address"</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="sa">r</span><span class="s2">"(\d</span><span class="si">{4}</span><span class="s2">) [A-ZÀ-Ÿ]"</span><span class="p">)</span>
+<span class="c1"># From location</span>
+<span class="n">df_address</span><span class="p">[</span><span class="s2">"plz_from_location"</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">"location"</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="s2">"(\d</span><span class="si">{4}</span><span class="s2">) [A-ZÀ-Ÿ]"</span><span class="p">)</span>
+<span class="c1"># From location_parsed</span>
+<span class="n">df_address</span><span class="p">[</span><span class="s2">"plz_from_location_parsed"</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">"location_parsed"</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span>
+    <span class="s2">"plz: ?(\d+)"</span>
+<span class="p">)</span>
 </pre></div>
 
      </div>
@@ -14999,7 +15036,10 @@ body[data-format='mobile'] .jp-OutputArea-child .jp-OutputArea-output {
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Sort columns by number of non-null values</span>
-<span class="n">df_address</span> <span class="o">=</span> <span class="n">df_address</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">df_address</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">df_address</span> <span class="o">=</span> <span class="n">df_address</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span>
+    <span class="n">df_address</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span>
+<span class="p">)</span>
+
 <span class="c1"># Create isna heatmap</span>
 <span class="n">sns</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">df_address</span><span class="o">.</span><span class="n">isna</span><span class="p">(),</span> <span class="n">cbar</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
@@ -15057,12 +15097,18 @@ class="
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Merge Municipality, Gemeinde, Commune, Comune, detail_responsive#municipality</span>
-<span class="n">df_address</span><span class="p">[</span><span class="s1">'Municipality'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_address</span><span class="p">[</span><span class="s1">'Municipality'</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">df_address</span><span class="p">[</span><span class="s1">'Gemeinde'</span><span class="p">])</span>
-<span class="n">df_address</span><span class="p">[</span><span class="s1">'Municipality'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_address</span><span class="p">[</span><span class="s1">'Municipality'</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">df_address</span><span class="p">[</span><span class="s1">'Commune'</span><span class="p">])</span>
-<span class="n">df_address</span><span class="p">[</span><span class="s1">'Municipality'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_address</span><span class="p">[</span><span class="s1">'Municipality'</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">df_address</span><span class="p">[</span><span class="s1">'Comune'</span><span class="p">])</span>
-<span class="n">df_address</span><span class="p">[</span><span class="s1">'Municipality'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_address</span><span class="p">[</span><span class="s1">'Municipality'</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">df_address</span><span class="p">[</span><span class="s1">'detail_responsive#municipality'</span><span class="p">])</span>
+<span class="n">df_address</span><span class="p">[</span><span class="s2">"Municipality"</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_address</span><span class="p">[</span><span class="s2">"Municipality"</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">df_address</span><span class="p">[</span><span class="s2">"Gemeinde"</span><span class="p">])</span>
+<span class="n">df_address</span><span class="p">[</span><span class="s2">"Municipality"</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_address</span><span class="p">[</span><span class="s2">"Municipality"</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">df_address</span><span class="p">[</span><span class="s2">"Commune"</span><span class="p">])</span>
+<span class="n">df_address</span><span class="p">[</span><span class="s2">"Municipality"</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_address</span><span class="p">[</span><span class="s2">"Municipality"</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">df_address</span><span class="p">[</span><span class="s2">"Comune"</span><span class="p">])</span>
+<span class="n">df_address</span><span class="p">[</span><span class="s2">"Municipality"</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_address</span><span class="p">[</span><span class="s2">"Municipality"</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span>
+    <span class="n">df_address</span><span class="p">[</span><span class="s2">"detail_responsive#municipality"</span><span class="p">]</span>
+<span class="p">)</span>
 
-<span class="n">df_address</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">'Gemeinde'</span><span class="p">,</span> <span class="s1">'Commune'</span><span class="p">,</span> <span class="s1">'Comune'</span><span class="p">,</span> <span class="s1">'detail_responsive#municipality'</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">df_address</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span>
+    <span class="p">[</span><span class="s2">"Gemeinde"</span><span class="p">,</span> <span class="s2">"Commune"</span><span class="p">,</span> <span class="s2">"Comune"</span><span class="p">,</span> <span class="s2">"detail_responsive#municipality"</span><span class="p">],</span>
+    <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
 </pre></div>
 
      </div>
@@ -15079,7 +15125,10 @@ class="
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Select rows where from_table and from_details_structured are not equal</span>
-<span class="n">df_address</span><span class="p">[</span><span class="n">df_address</span><span class="p">[</span><span class="s1">'municip_from_table'</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s1">''</span><span class="p">)</span> <span class="o">!=</span> <span class="n">df_address</span><span class="p">[</span><span class="s1">'municip_from_details_structured'</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s1">''</span><span class="p">)]</span>
+<span class="n">df_address</span><span class="p">[</span>
+    <span class="n">df_address</span><span class="p">[</span><span class="s2">"municip_from_table"</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s2">""</span><span class="p">)</span>
+    <span class="o">!=</span> <span class="n">df_address</span><span class="p">[</span><span class="s2">"municip_from_details_structured"</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s2">""</span><span class="p">)</span>
+<span class="p">]</span>
 </pre></div>
 
      </div>
@@ -15369,7 +15418,7 @@ Also it looks like there's some inconsistency in the data and we note that <code
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_address</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">'municip_from_table'</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_address</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s2">"municip_from_table"</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 
      </div>
@@ -15385,8 +15434,11 @@ Also it looks like there's some inconsistency in the data and we note that <code
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#  Select rows where Municipality and from_details_structured are not equal</span>
-<span class="n">df_address</span><span class="p">[</span><span class="n">df_address</span><span class="p">[</span><span class="s1">'Municipality'</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s1">''</span><span class="p">)</span> <span class="o">!=</span> <span class="n">df_address</span><span class="p">[</span><span class="s1">'municip_from_details_structured'</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s1">''</span><span class="p">)]</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Select rows where Municipality and from_details_structured are not equal</span>
+<span class="n">df_address</span><span class="p">[</span>
+    <span class="n">df_address</span><span class="p">[</span><span class="s2">"Municipality"</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s2">""</span><span class="p">)</span>
+    <span class="o">!=</span> <span class="n">df_address</span><span class="p">[</span><span class="s2">"municip_from_details_structured"</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s2">""</span><span class="p">)</span>
+<span class="p">]</span>
 </pre></div>
 
      </div>
@@ -15661,7 +15713,7 @@ Also it looks like there's some inconsistency in the data and we note that <code
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_address</span><span class="p">[</span><span class="n">df_address</span><span class="p">[</span><span class="s1">'municip_from_details_structured'</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">()]</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_address</span><span class="p">[</span><span class="n">df_address</span><span class="p">[</span><span class="s2">"municip_from_details_structured"</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">()]</span>
 </pre></div>
 
      </div>
@@ -15924,7 +15976,7 @@ Also it looks like there's some inconsistency in the data and we note that <code
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_address</span><span class="p">[</span><span class="n">df_address</span><span class="p">[</span><span class="s1">'Municipality_merged'</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">()]</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_address</span><span class="p">[</span><span class="n">df_address</span><span class="p">[</span><span class="s2">"Municipality_merged"</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">()]</span>
 </pre></div>
 
      </div>
@@ -16199,7 +16251,9 @@ Also it looks like there's some inconsistency in the data and we note that <code
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_address</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">'Municipality_merged'</span><span class="p">,</span> <span class="s1">'municip_from_details_structured'</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_address</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span>
+    <span class="p">[</span><span class="s2">"Municipality_merged"</span><span class="p">,</span> <span class="s2">"municip_from_details_structured"</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
 </pre></div>
 
      </div>
@@ -16216,7 +16270,7 @@ Also it looks like there's some inconsistency in the data and we note that <code
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Select rows where Municipality and Locality are not equal</span>
-<span class="n">df_address</span><span class="p">[</span><span class="n">df_address</span><span class="p">[</span><span class="s1">'Municipality'</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s1">''</span><span class="p">)</span> <span class="o">!=</span> <span class="n">df_address</span><span class="p">[</span><span class="s1">'Locality'</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s1">''</span><span class="p">)]</span>
+<span class="n">df_address</span><span class="p">[</span><span class="n">df_address</span><span class="p">[</span><span class="s2">"Municipality"</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s2">""</span><span class="p">)</span> <span class="o">!=</span> <span class="n">df_address</span><span class="p">[</span><span class="s2">"Locality"</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s2">""</span><span class="p">)]</span>
 </pre></div>
 
      </div>
@@ -16467,7 +16521,10 @@ Also it looks like there's some inconsistency in the data and we note that <code
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_address</span><span class="p">[(</span><span class="n">df_address</span><span class="p">[</span><span class="s1">'municip_from_location'</span><span class="p">]</span><span class="o">.</span><span class="n">notna</span><span class="p">())</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">df_address</span><span class="p">[</span><span class="s1">'municip_from_location_parsed'</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">())]</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_address</span><span class="p">[</span>
+    <span class="p">(</span><span class="n">df_address</span><span class="p">[</span><span class="s2">"municip_from_location"</span><span class="p">]</span><span class="o">.</span><span class="n">notna</span><span class="p">())</span>
+    <span class="o">&amp;</span> <span class="p">(</span><span class="n">df_address</span><span class="p">[</span><span class="s2">"municip_from_location_parsed"</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">())</span>
+<span class="p">]</span>
 </pre></div>
 
      </div>
@@ -16807,7 +16864,7 @@ Also it looks like there's some inconsistency in the data and we note that <code
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_address</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">'Locality'</span><span class="p">,</span> <span class="s1">'Zip'</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_address</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s2">"Locality"</span><span class="p">,</span> <span class="s2">"Zip"</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 
      </div>
@@ -16824,7 +16881,10 @@ Also it looks like there's some inconsistency in the data and we note that <code
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Select rows where from_location and from_location_parsed are not equal</span>
-<span class="n">df_address</span><span class="p">[</span><span class="n">df_address</span><span class="p">[</span><span class="s1">'municip_from_location'</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s1">''</span><span class="p">)</span> <span class="o">!=</span> <span class="n">df_address</span><span class="p">[</span><span class="s1">'municip_from_location_parsed'</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s1">''</span><span class="p">)]</span>
+<span class="n">df_address</span><span class="p">[</span>
+    <span class="n">df_address</span><span class="p">[</span><span class="s2">"municip_from_location"</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s2">""</span><span class="p">)</span>
+    <span class="o">!=</span> <span class="n">df_address</span><span class="p">[</span><span class="s2">"municip_from_location_parsed"</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s2">""</span><span class="p">)</span>
+<span class="p">]</span>
 </pre></div>
 
      </div>
@@ -17039,7 +17099,7 @@ Also it looks like there's some inconsistency in the data and we note that <code
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_address</span><span class="p">[</span><span class="n">df_address</span><span class="p">[</span><span class="s1">'municip_from_location'</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">()]</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_address</span><span class="p">[</span><span class="n">df_address</span><span class="p">[</span><span class="s2">"municip_from_location"</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">()]</span>
 </pre></div>
 
      </div>
@@ -17110,7 +17170,7 @@ Also it looks like there's some inconsistency in the data and we note that <code
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_address</span><span class="p">[</span><span class="n">df_address</span><span class="p">[</span><span class="s1">'municip_from_location_parsed'</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">()]</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_address</span><span class="p">[</span><span class="n">df_address</span><span class="p">[</span><span class="s2">"municip_from_location_parsed"</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">()]</span>
 </pre></div>
 
      </div>
@@ -17414,7 +17474,7 @@ Also it looks like there's some inconsistency in the data and we note that <code
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_address</span><span class="p">[</span><span class="n">df_address</span><span class="p">[</span><span class="s1">'Municipality'</span><span class="p">]</span> <span class="o">!=</span> <span class="n">df_address</span><span class="p">[</span><span class="s1">'municip_from_location'</span><span class="p">]]</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_address</span><span class="p">[</span><span class="n">df_address</span><span class="p">[</span><span class="s2">"Municipality"</span><span class="p">]</span> <span class="o">!=</span> <span class="n">df_address</span><span class="p">[</span><span class="s2">"municip_from_location"</span><span class="p">]]</span>
 </pre></div>
 
      </div>
@@ -17641,7 +17701,7 @@ Also it looks like there's some inconsistency in the data and we note that <code
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_address</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">'Municipality'</span><span class="p">,</span> <span class="s1">'municip_from_location_parsed'</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_address</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s2">"Municipality"</span><span class="p">,</span> <span class="s2">"municip_from_location_parsed"</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 
      </div>
@@ -17657,7 +17717,7 @@ Also it looks like there's some inconsistency in the data and we note that <code
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_address</span><span class="p">[</span><span class="n">df_address</span><span class="p">[</span><span class="s1">'municip_from_address'</span><span class="p">]</span> <span class="o">!=</span> <span class="n">df_address</span><span class="p">[</span><span class="s1">'municip_from_location'</span><span class="p">]]</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_address</span><span class="p">[</span><span class="n">df_address</span><span class="p">[</span><span class="s2">"municip_from_address"</span><span class="p">]</span> <span class="o">!=</span> <span class="n">df_address</span><span class="p">[</span><span class="s2">"municip_from_location"</span><span class="p">]]</span>
 </pre></div>
 
      </div>
@@ -18068,7 +18128,7 @@ Also it looks like there's some inconsistency in the data and we note that <code
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_address</span><span class="p">[</span><span class="n">df_address</span><span class="p">[</span><span class="s1">'municip_from_address'</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">()]</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_address</span><span class="p">[</span><span class="n">df_address</span><span class="p">[</span><span class="s2">"municip_from_address"</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">()]</span>
 </pre></div>
 
      </div>
@@ -18149,7 +18209,7 @@ Also it looks like there's some inconsistency in the data and we note that <code
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_address</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">'municip_from_location'</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_address</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s2">"municip_from_location"</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 
      </div>
@@ -18165,8 +18225,8 @@ Also it looks like there's some inconsistency in the data and we note that <code
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># rename municipality</span>
-<span class="n">df_address</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">'municip_from_address'</span><span class="p">:</span> <span class="s1">'municipality'</span><span class="p">},</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Rename municipality</span>
+<span class="n">df_address</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">"municip_from_address"</span><span class="p">:</span> <span class="s2">"municipality"</span><span class="p">},</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">df_address</span>
 </pre></div>
 
@@ -18369,7 +18429,7 @@ Also it looks like there's some inconsistency in the data and we note that <code
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_address</span><span class="p">[</span><span class="n">df_address</span><span class="p">[</span><span class="s1">'plz_from_address'</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">()]</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_address</span><span class="p">[</span><span class="n">df_address</span><span class="p">[</span><span class="s2">"plz_from_address"</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">()]</span>
 </pre></div>
 
      </div>
@@ -18441,7 +18501,7 @@ Also it looks like there's some inconsistency in the data and we note that <code
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -18449,34 +18509,12 @@ Also it looks like there's some inconsistency in the data and we note that <code
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_xlsx_plz</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="s2">"../../eda/utils/plz.xlsx"</span><span class="p">,</span> <span class="n">sheet_name</span><span class="o">=</span><span class="s1">'Blatt1'</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_xlsx_plz</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="s2">"../../eda/utils/plz.xlsx"</span><span class="p">,</span> <span class="n">sheet_name</span><span class="o">=</span><span class="s2">"Blatt1"</span><span class="p">)</span>
 </pre></div>
 
      </div>
 </div>
 </div>
-</div>
-
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-
-
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child">
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr">
-<pre>/opt/conda/lib/python3.10/site-packages/openpyxl/worksheet/_reader.py:312: UserWarning: Unknown extension is not supported and will be removed
-  warn(msg)
-</pre>
-</div>
-</div>
-
-</div>
-
 </div>
 
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
@@ -18487,8 +18525,17 @@ Also it looks like there's some inconsistency in the data and we note that <code
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_xlsx_plz</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">'Kanton'</span><span class="p">,</span> <span class="s1">'Canton'</span><span class="p">,</span> <span class="s1">'Cantone'</span><span class="p">,</span> <span class="s1">'Land'</span><span class="p">,</span> <span class="s1">'Pays'</span><span class="p">,</span> <span class="s1">'Paese'</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">df_xlsx_plz</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="n">df_xlsx_plz</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span> <span class="s1">'plz'</span><span class="p">,</span> <span class="n">df_xlsx_plz</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="s1">'municipality'</span><span class="p">,</span> <span class="n">df_xlsx_plz</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">2</span><span class="p">]:</span> <span class="s1">'kanton'</span><span class="p">},</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_xlsx_plz</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span>
+    <span class="p">[</span><span class="s2">"Kanton"</span><span class="p">,</span> <span class="s2">"Canton"</span><span class="p">,</span> <span class="s2">"Cantone"</span><span class="p">,</span> <span class="s2">"Land"</span><span class="p">,</span> <span class="s2">"Pays"</span><span class="p">,</span> <span class="s2">"Paese"</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+<span class="n">df_xlsx_plz</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span>
+    <span class="n">columns</span><span class="o">=</span><span class="p">{</span>
+        <span class="n">df_xlsx_plz</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span> <span class="s2">"plz"</span><span class="p">,</span>
+        <span class="n">df_xlsx_plz</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="s2">"municipality"</span><span class="p">,</span>
+        <span class="n">df_xlsx_plz</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">2</span><span class="p">]:</span> <span class="s2">"kanton"</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
 </pre></div>
 
      </div>
@@ -18636,8 +18683,8 @@ Also it looks like there's some inconsistency in the data and we note that <code
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Show if rows from 'plz_from_address' are found in 'df_xlsx_plz'</span>
-<span class="n">df_address</span><span class="p">[</span><span class="s1">'plz_from_address'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_address</span><span class="p">[</span><span class="s1">'plz_from_address'</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
-<span class="n">df_address</span><span class="p">[</span><span class="s1">'plz_from_address'</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">df_xlsx_plz</span><span class="p">[</span><span class="s1">'plz'</span><span class="p">])</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+<span class="n">df_address</span><span class="p">[</span><span class="s2">"plz_from_address"</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_address</span><span class="p">[</span><span class="s2">"plz_from_address"</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+<span class="n">df_address</span><span class="p">[</span><span class="s2">"plz_from_address"</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">df_xlsx_plz</span><span class="p">[</span><span class="s2">"plz"</span><span class="p">])</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
 </pre></div>
 
      </div>
@@ -18677,7 +18724,7 @@ Name: plz_from_address, dtype: int64</pre>
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>The above statement shows that there is 1 postal codes in <code>plz_from_address</code> that cannot be verified with the list provided by postleitzahlenschweiz.ch.</p>
+<p>The above statement shows that there is 1 postal code in <code>plz_from_address</code> that cannot be verified with the list provided by postleitzahlenschweiz.ch.</p>
 
 </div>
 </div>
@@ -18690,7 +18737,7 @@ Name: plz_from_address, dtype: int64</pre>
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_address</span><span class="p">[</span><span class="o">~</span><span class="n">df_address</span><span class="p">[</span><span class="s1">'plz_from_address'</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">df_xlsx_plz</span><span class="p">[</span><span class="s1">'plz'</span><span class="p">])]</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_address</span><span class="p">[</span><span class="o">~</span><span class="n">df_address</span><span class="p">[</span><span class="s2">"plz_from_address"</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">df_xlsx_plz</span><span class="p">[</span><span class="s2">"plz"</span><span class="p">])]</span>
 </pre></div>
 
      </div>
@@ -18767,7 +18814,7 @@ Name: plz_from_address, dtype: int64</pre>
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput " data-mime-type="text/markdown">
-<p>It appears to be an object located in france which explains the issue. Since objects in france are not part of the sampled population we drop£ it.</p>
+<p>It appears to be an object located in france which explains the issue. Since objects in france are not part of the sampled population we drop it.</p>
 
 </div>
 </div>
@@ -18780,7 +18827,7 @@ Name: plz_from_address, dtype: int64</pre>
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># drop 3874</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Drop row 3874</span>
 <span class="n">df_address</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="mi">3874</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 
@@ -18797,7 +18844,7 @@ Name: plz_from_address, dtype: int64</pre>
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_address</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">'plz_from_location'</span><span class="p">,</span> <span class="s1">'plz_from_location_parsed'</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_address</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s2">"plz_from_location"</span><span class="p">,</span> <span class="s2">"plz_from_location_parsed"</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 
      </div>
@@ -18991,7 +19038,7 @@ Name: plz_from_address, dtype: int64</pre>
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_address</span><span class="p">[</span><span class="s1">'canton'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_address</span><span class="p">[</span><span class="s1">'address'</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="sa">r</span><span class="s2">", ?([A-ZÀ-Ÿ]</span><span class="si">{2}</span><span class="s2">)"</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_address</span><span class="p">[</span><span class="s2">"canton"</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_address</span><span class="p">[</span><span class="s2">"address"</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="sa">r</span><span class="s2">", ?([A-ZÀ-Ÿ]</span><span class="si">{2}</span><span class="s2">)"</span><span class="p">)</span>
 </pre></div>
 
      </div>
@@ -19007,7 +19054,7 @@ Name: plz_from_address, dtype: int64</pre>
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_address</span><span class="p">[</span><span class="o">~</span><span class="n">df_address</span><span class="p">[</span><span class="s1">'canton'</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">df_xlsx_plz</span><span class="p">[</span><span class="s1">'kanton'</span><span class="p">])]</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_address</span><span class="p">[</span><span class="o">~</span><span class="n">df_address</span><span class="p">[</span><span class="s2">"canton"</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">df_xlsx_plz</span><span class="p">[</span><span class="s2">"kanton"</span><span class="p">])]</span>
 </pre></div>
 
      </div>
@@ -19074,7 +19121,7 @@ Name: plz_from_address, dtype: int64</pre>
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_address</span><span class="p">[</span><span class="n">df_address</span><span class="p">[</span><span class="s1">'canton'</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">()]</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_address</span><span class="p">[</span><span class="n">df_address</span><span class="p">[</span><span class="s2">"canton"</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">()]</span>
 </pre></div>
 
      </div>
@@ -19153,9 +19200,14 @@ Name: plz_from_address, dtype: int64</pre>
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_address</span><span class="p">[</span><span class="s1">'street_from_address'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_address</span><span class="p">[</span><span class="s1">'address'</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="sa">r</span><span class="s2">"(.+), \d</span><span class="si">{4}</span><span class="s2">"</span><span class="p">)</span>
-<span class="n">df_address</span><span class="p">[</span><span class="s1">'street_from_location_parsed'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_address</span><span class="p">[</span><span class="s1">'location_parsed'</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="sa">r</span><span class="s1">'^Strasse:(.+?) plz'</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">' '</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
-<span class="n">df_address</span><span class="p">[</span><span class="s1">'street_from_location'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_address</span><span class="p">[</span><span class="s1">'location'</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="sa">r</span><span class="s2">"(.+)\d</span><span class="si">{4}</span><span class="s2"> "</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_address</span><span class="p">[</span><span class="s2">"street_from_address"</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_address</span><span class="p">[</span><span class="s2">"address"</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="sa">r</span><span class="s2">"(.+), \d</span><span class="si">{4}</span><span class="s2">"</span><span class="p">)</span>
+<span class="n">df_address</span><span class="p">[</span><span class="s2">"street_from_location_parsed"</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">df_address</span><span class="p">[</span><span class="s2">"location_parsed"</span><span class="p">]</span>
+    <span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="sa">r</span><span class="s2">"^Strasse:(.+?) plz"</span><span class="p">)</span>
+    <span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">" "</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="n">df_address</span><span class="p">[</span><span class="s2">"street_from_location"</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_address</span><span class="p">[</span><span class="s2">"location"</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="sa">r</span><span class="s2">"(.+)\d</span><span class="si">{4}</span><span class="s2"> "</span><span class="p">)</span>
 </pre></div>
 
      </div>
@@ -19375,7 +19427,7 @@ Name: plz_from_address, dtype: int64</pre>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Show where columns are na but 'from_address' is not na</span>
-<span class="n">df_address</span><span class="p">[</span><span class="n">df_address</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">df_address</span><span class="p">[</span><span class="s1">'street_from_address'</span><span class="p">]</span><span class="o">.</span><span class="n">notna</span><span class="p">()]</span>
+<span class="n">df_address</span><span class="p">[</span><span class="n">df_address</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">df_address</span><span class="p">[</span><span class="s2">"street_from_address"</span><span class="p">]</span><span class="o">.</span><span class="n">notna</span><span class="p">()]</span>
 </pre></div>
 
      </div>
@@ -19758,7 +19810,9 @@ Name: plz_from_address, dtype: int64</pre>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Get index of rows where columns are na but 'from_address' is not na</span>
-<span class="n">list_index</span> <span class="o">=</span> <span class="n">df_address</span><span class="p">[</span><span class="n">df_address</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">df_address</span><span class="p">[</span><span class="s1">'street_from_address'</span><span class="p">]</span><span class="o">.</span><span class="n">notna</span><span class="p">()]</span><span class="o">.</span><span class="n">index</span>
+<span class="n">list_index</span> <span class="o">=</span> <span class="n">df_address</span><span class="p">[</span>
+    <span class="n">df_address</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">df_address</span><span class="p">[</span><span class="s2">"street_from_address"</span><span class="p">]</span><span class="o">.</span><span class="n">notna</span><span class="p">()</span>
+<span class="p">]</span><span class="o">.</span><span class="n">index</span>
 </pre></div>
 
      </div>
@@ -19775,8 +19829,8 @@ Name: plz_from_address, dtype: int64</pre>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Cleanup 'from_address' and 'from_location_parsed' columns</span>
-<span class="n">df_address</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df_address</span><span class="p">[</span><span class="s1">'street_from_address'</span><span class="p">]</span> <span class="o">==</span> <span class="s1">'-'</span><span class="p">,</span> <span class="s1">'street_from_address'</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
-<span class="n">df_address</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df_address</span><span class="p">[</span><span class="s1">'street_from_address'</span><span class="p">]</span> <span class="o">==</span> <span class="s1">'à'</span><span class="p">,</span> <span class="s1">'street_from_address'</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+<span class="n">df_address</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df_address</span><span class="p">[</span><span class="s2">"street_from_address"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"-"</span><span class="p">,</span> <span class="s2">"street_from_address"</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+<span class="n">df_address</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df_address</span><span class="p">[</span><span class="s2">"street_from_address"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"à"</span><span class="p">,</span> <span class="s2">"street_from_address"</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
 </pre></div>
 
      </div>
@@ -19852,7 +19906,7 @@ Name: 12363, dtype: object</pre>
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_address</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">12363</span><span class="p">,</span> <span class="s1">'street_from_address'</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'Rte de la Jorette'</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_address</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">12363</span><span class="p">,</span> <span class="s2">"street_from_address"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"Rte de la Jorette"</span>
 </pre></div>
 
      </div>
@@ -20239,7 +20293,17 @@ Name: 12363, dtype: object</pre>
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_address</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">'street_from_location_parsed'</span><span class="p">,</span> <span class="s1">'street_from_location'</span><span class="p">,</span> <span class="s1">'location'</span><span class="p">,</span> <span class="s1">'address'</span><span class="p">,</span> <span class="s1">'location_parsed'</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_address</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span>
+    <span class="p">[</span>
+        <span class="s2">"street_from_location_parsed"</span><span class="p">,</span>
+        <span class="s2">"street_from_location"</span><span class="p">,</span>
+        <span class="s2">"location"</span><span class="p">,</span>
+        <span class="s2">"address"</span><span class="p">,</span>
+        <span class="s2">"location_parsed"</span><span class="p">,</span>
+    <span class="p">],</span>
+    <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
 </pre></div>
 
      </div>
@@ -20399,11 +20463,17 @@ Name: 12363, dtype: object</pre>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Separate the street and number</span>
-<span class="n">df_address</span><span class="p">[</span><span class="s2">"street_nr"</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_address</span><span class="p">[</span><span class="s1">'street_from_address'</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="sa">r</span><span class="s1">'^.+ (\d.+)'</span><span class="p">)</span>
-<span class="n">df_address</span><span class="p">[</span><span class="s2">"street"</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_address</span><span class="p">[</span><span class="s1">'street_from_address'</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="sa">r</span><span class="s1">'^(.+?) \d'</span><span class="p">)</span>
-<span class="n">df_address</span><span class="p">[</span><span class="s2">"street"</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_address</span><span class="p">[</span><span class="s1">'street'</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">rstrip</span><span class="p">()</span>
+<span class="n">df_address</span><span class="p">[</span><span class="s2">"street_nr"</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_address</span><span class="p">[</span><span class="s2">"street_from_address"</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="sa">r</span><span class="s2">"^.+ (\d.+)"</span><span class="p">)</span>
+<span class="n">df_address</span><span class="p">[</span><span class="s2">"street"</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_address</span><span class="p">[</span><span class="s2">"street_from_address"</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="sa">r</span><span class="s2">"^(.+?) \d"</span><span class="p">)</span>
+<span class="n">df_address</span><span class="p">[</span><span class="s2">"street"</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_address</span><span class="p">[</span><span class="s2">"street"</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">rstrip</span><span class="p">()</span>
 
-<span class="n">df_address</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">'street_from_address'</span><span class="p">,</span> <span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">df_address</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span>
+    <span class="p">[</span>
+        <span class="s2">"street_from_address"</span><span class="p">,</span>
+    <span class="p">],</span>
+    <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
 </pre></div>
 
      </div>
@@ -20597,9 +20667,19 @@ Name: 12363, dtype: object</pre>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Prepare dataframe to handle availability data</span>
-<span class="n">cols_availability</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'Availability'</span><span class="p">,</span> <span class="s1">'Verfügbarkeit'</span><span class="p">,</span> <span class="s1">'Disponibilité'</span><span class="p">,</span> <span class="s1">'Disponibilità'</span><span class="p">,</span> <span class="s1">'detail_responsive#available_from'</span><span class="p">,</span>  <span class="s1">'Availability_merged'</span><span class="p">]</span>
+<span class="n">cols_availability</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">"Availability"</span><span class="p">,</span>
+    <span class="s2">"Verfügbarkeit"</span><span class="p">,</span>
+    <span class="s2">"Disponibilité"</span><span class="p">,</span>
+    <span class="s2">"Disponibilità"</span><span class="p">,</span>
+    <span class="s2">"detail_responsive#available_from"</span><span class="p">,</span>
+    <span class="s2">"Availability_merged"</span><span class="p">,</span>
+<span class="p">]</span>
+
 <span class="n">df_availability</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">cols_availability</span><span class="p">]</span>
-<span class="n">df_availability</span><span class="p">[</span><span class="s1">'from_details_structured'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">'details_structured'</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="sa">r</span><span class="s2">"'Availability': '(.+?)'"</span><span class="p">)</span>
+<span class="n">df_availability</span><span class="p">[</span><span class="s2">"from_details_structured"</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">"details_structured"</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span>
+    <span class="sa">r</span><span class="s2">"'Availability': '(.+?)'"</span>
+<span class="p">)</span>
 </pre></div>
 
      </div>
@@ -20683,7 +20763,10 @@ dtype: bool</pre>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Sort columns by number of non-null values</span>
-<span class="n">df_availability</span> <span class="o">=</span> <span class="n">df_availability</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">df_availability</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">df_availability</span> <span class="o">=</span> <span class="n">df_availability</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span>
+    <span class="n">df_availability</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span>
+<span class="p">)</span>
+
 <span class="c1"># Create isna heatmap</span>
 <span class="n">sns</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">df_availability</span><span class="o">.</span><span class="n">isna</span><span class="p">(),</span> <span class="n">cbar</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
@@ -20729,12 +20812,17 @@ class="
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Merge columns `Availability`, `Verfügbarkeit`, `Disponibilité` and `Disponibilità`</span>
-<span class="n">df_availability</span><span class="p">[</span><span class="s1">'availability'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_availability</span><span class="p">[</span><span class="n">cols_availability</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s1">''</span><span class="p">)</span> <span class="o">+</span> \
-  <span class="p">(</span><span class="n">df_availability</span><span class="p">[</span><span class="n">cols_availability</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s1">''</span><span class="p">)</span> <span class="o">+</span> \
-  <span class="p">(</span><span class="n">df_availability</span><span class="p">[</span><span class="n">cols_availability</span><span class="p">[</span><span class="mi">2</span><span class="p">]])</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s1">''</span><span class="p">)</span> <span class="o">+</span> \
-  <span class="p">(</span><span class="n">df_availability</span><span class="p">[</span><span class="n">cols_availability</span><span class="p">[</span><span class="mi">3</span><span class="p">]])</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s1">''</span><span class="p">)</span>
-<span class="c1"># compare 'availability' with 'Availability_merged'</span>
-<span class="p">(</span><span class="n">df_availability</span><span class="p">[</span><span class="s1">'availability'</span><span class="p">]</span> <span class="o">==</span> <span class="n">df_availability</span><span class="p">[</span><span class="n">cols_availability</span><span class="p">[</span><span class="mi">5</span><span class="p">]]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s1">''</span><span class="p">))</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">==</span> <span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">df_availability</span><span class="p">[</span><span class="s2">"availability"</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">df_availability</span><span class="p">[</span><span class="n">cols_availability</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+    <span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">df_availability</span><span class="p">[</span><span class="n">cols_availability</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span>
+    <span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">df_availability</span><span class="p">[</span><span class="n">cols_availability</span><span class="p">[</span><span class="mi">2</span><span class="p">]])</span>
+    <span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">df_availability</span><span class="p">[</span><span class="n">cols_availability</span><span class="p">[</span><span class="mi">3</span><span class="p">]])</span>
+<span class="p">)</span>
+
+<span class="c1"># Compare 'availability' with 'Availability_merged'</span>
+<span class="p">(</span>
+    <span class="n">df_availability</span><span class="p">[</span><span class="s2">"availability"</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s2">""</span><span class="p">)</span> <span class="o">==</span> <span class="n">df_availability</span><span class="p">[</span><span class="n">cols_availability</span><span class="p">[</span><span class="mi">5</span><span class="p">]]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s2">""</span><span class="p">)</span>
+<span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">==</span> <span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 </pre></div>
 
      </div>
@@ -20786,12 +20874,11 @@ class="
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Merge columns `availability` and `detail_responsive#available_from`</span>
-<span class="n">df_availability</span><span class="p">[</span><span class="s1">'availability'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_availability</span><span class="p">[</span><span class="n">cols_availability</span><span class="p">[</span><span class="mi">5</span><span class="p">]]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s1">''</span><span class="p">)</span> <span class="o">+</span> \
-  <span class="p">(</span><span class="n">df_availability</span><span class="p">[</span><span class="n">cols_availability</span><span class="p">[</span><span class="mi">4</span><span class="p">]])</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s1">''</span><span class="p">)</span>
+<span class="n">df_availability</span><span class="p">[</span><span class="s2">"availability"</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_availability</span><span class="p">[</span><span class="n">cols_availability</span><span class="p">[</span><span class="mi">5</span><span class="p">]]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span>
+    <span class="n">df_availability</span><span class="p">[</span><span class="n">cols_availability</span><span class="p">[</span><span class="mi">4</span><span class="p">]]</span>
+<span class="p">)</span>
 
-<span class="n">df_availability</span><span class="p">[</span><span class="s1">'availability'</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_availability</span><span class="p">[</span><span class="s1">'availability'</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">''</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
-
-<span class="n">df_availability</span><span class="p">[</span><span class="s1">'availability'</span><span class="p">]</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+<span class="n">df_availability</span><span class="p">[</span><span class="s2">"availability"</span><span class="p">]</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
 </pre></div>
 
      </div>
@@ -20843,7 +20930,19 @@ class="
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Clean up df_availability</span>
-<span class="n">df_availability</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">'Availability'</span><span class="p">,</span> <span class="s1">'Verfügbarkeit'</span><span class="p">,</span> <span class="s1">'Disponibilité'</span><span class="p">,</span> <span class="s1">'Disponibilità'</span><span class="p">,</span> <span class="s1">'detail_responsive#available_from'</span><span class="p">,</span> <span class="s1">'Availability_merged'</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">df_availability</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span>
+    <span class="p">[</span>
+        <span class="s2">"Availability"</span><span class="p">,</span>
+        <span class="s2">"Verfügbarkeit"</span><span class="p">,</span>
+        <span class="s2">"Disponibilité"</span><span class="p">,</span>
+        <span class="s2">"Disponibilità"</span><span class="p">,</span>
+        <span class="s2">"detail_responsive#available_from"</span><span class="p">,</span>
+        <span class="s2">"Availability_merged"</span><span class="p">,</span>
+        <span class="s2">"from_details_structured"</span>
+    <span class="p">],</span>
+    <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="n">df_availability</span>
 </pre></div>
 
@@ -20883,7 +20982,6 @@ class="
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>from_details_structured</th>
       <th>availability</th>
     </tr>
   </thead>
@@ -20891,61 +20989,50 @@ class="
     <tr>
       <th>0</th>
       <td>On request</td>
-      <td>On request</td>
     </tr>
     <tr>
       <th>1</th>
       <td>On request</td>
-      <td>On request</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>NaN</td>
       <td>Immediately</td>
     </tr>
     <tr>
       <th>3</th>
       <td>On request</td>
-      <td>On request</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>On request</td>
       <td>On request</td>
     </tr>
     <tr>
       <th>...</th>
       <td>...</td>
-      <td>...</td>
     </tr>
     <tr>
       <th>13373</th>
-      <td>On request</td>
       <td>On request</td>
     </tr>
     <tr>
       <th>13374</th>
       <td>On request</td>
-      <td>On request</td>
     </tr>
     <tr>
       <th>13375</th>
-      <td>On request</td>
       <td>On request</td>
     </tr>
     <tr>
       <th>13376</th>
       <td>Immediately</td>
-      <td>Immediately</td>
     </tr>
     <tr>
       <th>13377</th>
       <td>Immediately</td>
-      <td>Immediately</td>
     </tr>
   </tbody>
 </table>
-<p>13378 rows × 2 columns</p>
+<p>13378 rows × 1 columns</p>
 </div>
 </div>
 
