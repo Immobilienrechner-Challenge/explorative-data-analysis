@@ -6,7 +6,7 @@ import numpy as np
 class ImmoHelper(object):
     def __init__(
         self,
-        url="https://raw.githubusercontent.com/Immobilienrechner-Challenge/data/main/immoscout_cleaned_lat_lon_fixed_v9.csv",
+        url="https://raw.githubusercontent.com/Immobilienrechner-Challenge/data/main/immo_data_202208.csv",
     ):
         self.data = pd.read_csv(url, low_memory=False)
 

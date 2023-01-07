@@ -82,19 +82,21 @@ class ImmoHelper(object):
             data_cleaned["price"] = data["price_cleaned"]
 
         ## Zip code
-        data_cleaned["zip_code"] = data["address"].str.extract(r"(\d{4}) [A-ZÀ-Ÿ]")
+        data_cleaned["zip_code"] = data["address"].str.extract(r"(\d{4}) [A-ZÀ-Ÿa-z]")
         data_cleaned["zip_address_s"] = data["address_s"].str.extract(
-            "(\d{4}) [A-ZÀ-Ÿ]"
+            "(\d{4}) [A-ZÀ-Ÿa-z]"
         )
         data_cleaned["zip_code"] = data_cleaned["zip_code"].fillna(
             data_cleaned["zip_address_s"]
         )
 
-        if not kaggle:
-            # Clean up typos
-            data_cleaned.loc[data_cleaned["zip_code"] == "2737", "zip_code"] = "2735"
-            data_cleaned.loc[data_cleaned["zip_code"] == "3217", "zip_code"] = "3127"
-            data_cleaned.loc[data_cleaned["zip_code"] == "3364", "zip_code"] = "3365"
+        # if not kaggle:
+        # Clean up typos
+        data_cleaned.loc[data_cleaned["zip_code"] == "2737", "zip_code"] = "2735"
+        data_cleaned.loc[data_cleaned["zip_code"] == "3217", "zip_code"] = "3127"
+        data_cleaned.loc[data_cleaned["zip_code"] == "3364", "zip_code"] = "3365"
+        data_cleaned.loc[data_cleaned["zip_code"] == "6511", "zip_code"] = "6593"
+        data_cleaned.loc[data_cleaned["zip_code"] == "8371", "zip_code"] = "8370"
 
         data_cleaned["municipality"] = data["address"].str.extract(r"\d{4} (.+?),")
         data_cleaned["municipality_address_s"] = data["address_s"].str.extract(
@@ -105,7 +107,10 @@ class ImmoHelper(object):
         )
 
         ## Canton
-        df_xlsx_plz = pd.read_excel("./utils/plz.xlsx", sheet_name="Blatt1")
+        df_xlsx_plz = pd.read_excel(
+            "https://github.com/Immobilienrechner-Challenge/data/raw/main/plz.xlsx",
+            sheet_name="Blatt1",
+        )
         df_xlsx_plz.drop(
             ["Kanton", "Canton", "Cantone", "Land", "Pays", "Paese"],
             axis=1,
