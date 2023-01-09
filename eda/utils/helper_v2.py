@@ -90,7 +90,6 @@ class ImmoHelper(object):
             data_cleaned["zip_address_s"]
         )
 
-        # if not kaggle:
         # Clean up typos
         data_cleaned.loc[data_cleaned["zip_code"] == "2737", "zip_code"] = "2735"
         data_cleaned.loc[data_cleaned["zip_code"] == "3217", "zip_code"] = "3127"
@@ -182,6 +181,6 @@ class ImmoHelper(object):
             data_cleaned["Index"] = data.iloc[:, 1]
 
         if return_gde:
-            return data_cleaned.join(data.loc[:, "ForestDensityL":"gde_workers_total"])
+            return data_cleaned.join(data.loc[:, "ForestDensityL":"gde_workers_total"]).drop(["Locality", "Zip"], axis=1)
         else:
             return data_cleaned
